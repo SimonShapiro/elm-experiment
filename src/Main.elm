@@ -31,6 +31,7 @@ type alias Recipe =
   , recipeWater: Int
   , starterAmount: Int
   , saltAmount: Int
+  , totalDoughWeight: Int
   }
 
 calculateRecipe: RecipeParameters -> Recipe
@@ -40,11 +41,16 @@ calculateRecipe parms =
     starterWater = starterAmount // 2
     starterFlour = starterWater
     totalWater = round (Basics.toFloat parms.totalFlour * parms.hydration)
+    recipeFlour = parms.totalFlour - starterFlour
+    recipeWater = totalWater - starterWater
+    saltAmount = round (Basics.toFloat parms.totalFlour * parms.saltPercent)
+    totalDoughWeight = (recipeFlour + recipeWater + starterAmount + saltAmount)
   in
-    { recipeFlour = parms.totalFlour - starterFlour
-    , recipeWater = totalWater - starterWater
+    { recipeFlour = recipeFlour
+    , recipeWater = recipeWater
     , starterAmount = starterAmount 
-    , saltAmount = round (Basics.toFloat parms.totalFlour * parms.saltPercent)
+    , saltAmount = saltAmount
+    , totalDoughWeight = totalDoughWeight
     }
 
 initParms: RecipeForm
@@ -105,11 +111,12 @@ update msg model =
       in
         { parameters = parameters , recipe = recipe} 
 
+-- class="w3-panel w3-white w3-card w3-display-container"
 view: Model->Html Msg
 view model =
-  div []
+  div [class "w3-container w3-content"]
       [ 
-        div [id "parameters"][ 
+        div [class "w3-panel w3-white w3-card w3-display-container", id "parameters"][ 
           div [][
           text "Total Flour "
           , input [placeholder "Total Flour", value model.parameters.totalFlour, onInput ChangeTotalFlour][]
@@ -122,21 +129,27 @@ view model =
           text "Percent of starter "
           , input [placeholder "Percent of starter", value model.parameters.starterPercent, onInput ChangeStarter][]
         ]
-        ,div [][
-          text "Recipe Flour "
-          , text (String.fromInt model.recipe.recipeFlour)
         ]
-        ]
-        ,div [][
-            text "Recipe Water "
-          , text (String.fromInt model.recipe.recipeWater)
-        ]
-        ,div [][
-            text "Starter "
-          ,           text (String.fromInt model.recipe.starterAmount)
-        ]
-        ,div [][
-            text "Salt "
-          , text (String.fromInt model.recipe.saltAmount)
+        , div [class "w3-panel w3-white w3-card w3-display-container", id "parameters"][ 
+          div [][
+            text "Recipe Flour "
+            , text (String.fromInt model.recipe.recipeFlour)
+          ]
+          ,div [][
+              text "Recipe Water "
+            , text (String.fromInt model.recipe.recipeWater)
+          ]
+          ,div [][
+              text "Starter "
+            ,           text (String.fromInt model.recipe.starterAmount)
+          ]
+          ,div [][
+              text "Salt "
+            , text (String.fromInt model.recipe.saltAmount)
+          ]
+          ,div [][
+              text "Total Dough Weight "
+            , text (String.fromInt model.recipe.totalDoughWeight)
+          ]
         ]
       ]
