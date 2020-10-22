@@ -86,9 +86,14 @@ type Msg =
 update: Msg->Model->Model
 update msg model =
   case msg of
-    ChangeTotalFlour _ ->  -- we don't really care what newAmount is because we get it from the form
-        { model | recipe = convertRecipeForm model.parameters
-                          |> calculateRecipe }
+    ChangeTotalFlour newFlour -> 
+      let
+        parameters = model.parameters |> \p -> {p | totalFlour = newFlour}
+      in
+        {  parameters = parameters
+        , recipe = convertRecipeForm parameters
+                          |> calculateRecipe 
+        }
 
     ChangeHydration newHydration ->
       let 

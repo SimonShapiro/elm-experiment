@@ -5223,12 +5223,17 @@ var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 'ChangeTotalFlour':
-				return _Utils_update(
-					model,
-					{
-						recipe: $author$project$Main$calculateRecipe(
-							$author$project$Main$convertRecipeForm(model.parameters))
-					});
+				var newFlour = msg.a;
+				var parameters = function (p) {
+					return _Utils_update(
+						p,
+						{totalFlour: newFlour});
+				}(model.parameters);
+				return {
+					parameters: parameters,
+					recipe: $author$project$Main$calculateRecipe(
+						$author$project$Main$convertRecipeForm(parameters))
+				};
 			case 'ChangeHydration':
 				var newHydration = msg.a;
 				var parms = model.parameters;
