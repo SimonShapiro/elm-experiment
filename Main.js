@@ -4355,6 +4355,10 @@ function _Browser_load(url)
 		}
 	}));
 }
+var $elm$core$Basics$apR = F2(
+	function (x, f) {
+		return f(x);
+	});
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -4755,10 +4759,6 @@ var $elm$core$Array$Leaf = function (a) {
 };
 var $elm$core$Basics$apL = F2(
 	function (f, x) {
-		return f(x);
-	});
-var $elm$core$Basics$apR = F2(
-	function (x, f) {
 		return f(x);
 	});
 var $elm$core$Basics$eq = _Utils_equal;
@@ -5223,14 +5223,12 @@ var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 'ChangeTotalFlour':
-				var newAmount = msg.a;
-				var parms = model.parameters;
-				var parameters = _Utils_update(
-					parms,
-					{totalFlour: newAmount});
-				var recipe = $author$project$Main$calculateRecipe(
-					$author$project$Main$convertRecipeForm(parameters));
-				return {parameters: parameters, recipe: recipe};
+				return _Utils_update(
+					model,
+					{
+						recipe: $author$project$Main$calculateRecipe(
+							$author$project$Main$convertRecipeForm(model.parameters))
+					});
 			case 'ChangeHydration':
 				var newHydration = msg.a;
 				var parms = model.parameters;

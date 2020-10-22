@@ -70,7 +70,8 @@ convertRecipeForm form =
 
 init:  Model
 init =  { parameters = initParms
-        , recipe = calculateRecipe (convertRecipeForm initParms)
+        , recipe = convertRecipeForm initParms
+          |> calculateRecipe 
         }
 
 main: Program () Model Msg
@@ -82,18 +83,12 @@ type Msg =
       | ChangeHydration String
       | ChangeStarter String
     
-
-
 update: Msg->Model->Model
 update msg model =
   case msg of
-    ChangeTotalFlour newAmount ->
-      let 
-        parms = model.parameters
-        parameters = {parms | totalFlour = newAmount}
-        recipe = calculateRecipe (convertRecipeForm parameters)
-      in
-        { parameters = parameters , recipe = recipe} 
+    ChangeTotalFlour _ ->  -- we don't really care what newAmount is because we get it from the form
+        { model | recipe = convertRecipeForm model.parameters
+                          |> calculateRecipe }
 
     ChangeHydration newHydration ->
       let 
