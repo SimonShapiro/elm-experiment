@@ -4355,10 +4355,7 @@ function _Browser_load(url)
 		}
 	}));
 }
-var $elm$core$Basics$apR = F2(
-	function (x, f) {
-		return f(x);
-	});
+var $author$project$Rests$init = {one: 1};
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -4439,71 +4436,6 @@ var $elm$core$Array$foldr = F3(
 var $elm$core$Array$toList = function (array) {
 	return A3($elm$core$Array$foldr, $elm$core$List$cons, _List_Nil, array);
 };
-var $elm$core$Basics$add = _Basics_add;
-var $elm$core$Basics$idiv = _Basics_idiv;
-var $elm$core$Basics$mul = _Basics_mul;
-var $elm$core$Basics$round = _Basics_round;
-var $elm$core$Basics$sub = _Basics_sub;
-var $elm$core$Basics$toFloat = _Basics_toFloat;
-var $author$project$Main$calculateRecipe = function (parms) {
-	var totalWater = $elm$core$Basics$round(parms.totalFlour * parms.hydration);
-	var starterAmount = $elm$core$Basics$round(parms.totalFlour * parms.starterPercent);
-	var starterWater = (starterAmount / 2) | 0;
-	var starterFlour = starterWater;
-	var saltAmount = $elm$core$Basics$round(parms.totalFlour * parms.saltPercent);
-	var recipeWater = totalWater - starterWater;
-	var recipeFlour = parms.totalFlour - starterFlour;
-	var totalDoughWeight = ((recipeFlour + recipeWater) + starterAmount) + saltAmount;
-	return {recipeFlour: recipeFlour, recipeWater: recipeWater, saltAmount: saltAmount, starterAmount: starterAmount, totalDoughWeight: totalDoughWeight};
-};
-var $elm$core$Maybe$Just = function (a) {
-	return {$: 'Just', a: a};
-};
-var $elm$core$Maybe$Nothing = {$: 'Nothing'};
-var $elm$core$String$toFloat = _String_toFloat;
-var $elm$core$String$toInt = _String_toInt;
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$Main$convertRecipeForm = function (form) {
-	return {
-		hydration: A2(
-			$elm$core$Maybe$withDefault,
-			0.0,
-			$elm$core$String$toFloat(form.hydration)),
-		saltPercent: A2(
-			$elm$core$Maybe$withDefault,
-			0.0,
-			$elm$core$String$toFloat(form.saltPercent)),
-		starterPercent: A2(
-			$elm$core$Maybe$withDefault,
-			0.0,
-			$elm$core$String$toFloat(form.starterPercent)),
-		totalFlour: A2(
-			$elm$core$Maybe$withDefault,
-			0,
-			$elm$core$String$toInt(form.totalFlour))
-	};
-};
-var $elm$core$String$fromFloat = _String_fromNumber;
-var $elm$core$String$fromInt = _String_fromNumber;
-var $author$project$Main$initParms = {
-	hydration: $elm$core$String$fromFloat(0.7),
-	saltPercent: $elm$core$String$fromFloat(0.02),
-	starterPercent: $elm$core$String$fromFloat(0.2),
-	totalFlour: $elm$core$String$fromInt(500)
-};
-var $author$project$Main$init = {
-	parameters: $author$project$Main$initParms,
-	recipe: $author$project$Main$calculateRecipe(
-		$author$project$Main$convertRecipeForm($author$project$Main$initParms))
-};
 var $elm$core$Result$Err = function (a) {
 	return {$: 'Err', a: a};
 };
@@ -4526,10 +4458,16 @@ var $elm$json$Json$Decode$OneOf = function (a) {
 	return {$: 'OneOf', a: a};
 };
 var $elm$core$Basics$False = {$: 'False'};
+var $elm$core$Basics$add = _Basics_add;
+var $elm$core$Maybe$Just = function (a) {
+	return {$: 'Just', a: a};
+};
+var $elm$core$Maybe$Nothing = {$: 'Nothing'};
 var $elm$core$String$all = _String_all;
 var $elm$core$Basics$and = _Basics_and;
 var $elm$core$Basics$append = _Utils_append;
 var $elm$json$Json$Encode$encode = _Json_encode;
+var $elm$core$String$fromInt = _String_fromNumber;
 var $elm$core$String$join = F2(
 	function (sep, chunks) {
 		return A2(
@@ -4579,6 +4517,7 @@ var $elm$core$List$length = function (xs) {
 };
 var $elm$core$List$map2 = _List_map2;
 var $elm$core$Basics$le = _Utils_le;
+var $elm$core$Basics$sub = _Basics_sub;
 var $elm$core$List$rangeHelp = F3(
 	function (lo, hi, list) {
 		rangeHelp:
@@ -4750,6 +4689,7 @@ var $elm$core$Basics$logBase = F2(
 	function (base, number) {
 		return _Basics_log(number) / _Basics_log(base);
 	});
+var $elm$core$Basics$toFloat = _Basics_toFloat;
 var $elm$core$Array$shiftStep = $elm$core$Basics$ceiling(
 	A2($elm$core$Basics$logBase, 2, $elm$core$Array$branchFactor));
 var $elm$core$Array$empty = A4($elm$core$Array$Array_elm_builtin, 0, $elm$core$Array$shiftStep, $elm$core$Elm$JsArray$empty, $elm$core$Elm$JsArray$empty);
@@ -4761,6 +4701,10 @@ var $elm$core$Basics$apL = F2(
 	function (f, x) {
 		return f(x);
 	});
+var $elm$core$Basics$apR = F2(
+	function (x, f) {
+		return f(x);
+	});
 var $elm$core$Basics$eq = _Utils_equal;
 var $elm$core$Basics$floor = _Basics_floor;
 var $elm$core$Elm$JsArray$length = _JsArray_length;
@@ -4769,6 +4713,7 @@ var $elm$core$Basics$max = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) > 0) ? x : y;
 	});
+var $elm$core$Basics$mul = _Basics_mul;
 var $elm$core$Array$SubTree = function (a) {
 	return {$: 'SubTree', a: a};
 };
@@ -4838,6 +4783,7 @@ var $elm$core$Array$builderToArray = F2(
 				builder.tail);
 		}
 	});
+var $elm$core$Basics$idiv = _Basics_idiv;
 var $elm$core$Basics$lt = _Utils_lt;
 var $elm$core$Array$initializeHelp = F5(
 	function (fn, fromIndex, len, nodeList, tail) {
@@ -4937,6 +4883,7 @@ var $elm$core$String$left = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3($elm$core$String$slice, 0, n, string);
 	});
+var $elm$core$String$toInt = _String_toInt;
 var $elm$url$Url$chompBeforePath = F5(
 	function (protocol, path, params, frag, str) {
 		if ($elm$core$String$isEmpty(str) || A2($elm$core$String$contains, '@', str)) {
@@ -5219,280 +5166,23 @@ var $elm$browser$Browser$sandbox = function (impl) {
 			view: impl.view
 		});
 };
-var $author$project$Main$update = F2(
+var $author$project$Rests$update = F2(
 	function (msg, model) {
-		switch (msg.$) {
-			case 'ChangeTotalFlour':
-				var newFlour = msg.a;
-				var parameters = function (p) {
-					return _Utils_update(
-						p,
-						{totalFlour: newFlour});
-				}(model.parameters);
-				return {
-					parameters: parameters,
-					recipe: $author$project$Main$calculateRecipe(
-						$author$project$Main$convertRecipeForm(parameters))
-				};
-			case 'ChangeHydration':
-				var newHydration = msg.a;
-				var parameters = function (p) {
-					return _Utils_update(
-						p,
-						{hydration: newHydration});
-				}(model.parameters);
-				var recipe = $author$project$Main$calculateRecipe(
-					$author$project$Main$convertRecipeForm(parameters));
-				return {parameters: parameters, recipe: recipe};
-			default:
-				var newStarter = msg.a;
-				var parameters = function (p) {
-					return _Utils_update(
-						p,
-						{starterPercent: newStarter});
-				}(model.parameters);
-				var recipe = $author$project$Main$calculateRecipe(
-					$author$project$Main$convertRecipeForm(parameters));
-				return {parameters: parameters, recipe: recipe};
-		}
+		return {one: 6};
 	});
-var $author$project$Main$ChangeHydration = function (a) {
-	return {$: 'ChangeHydration', a: a};
-};
-var $author$project$Main$ChangeStarter = function (a) {
-	return {$: 'ChangeStarter', a: a};
-};
-var $author$project$Main$ChangeTotalFlour = function (a) {
-	return {$: 'ChangeTotalFlour', a: a};
-};
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
-var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$a = _VirtualDom_node('a');
-var $elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
-var $elm$html$Html$i = _VirtualDom_node('i');
-var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$header = A2(
-	$elm$html$Html$div,
-	_List_fromArray(
-		[
-			$elm$html$Html$Attributes$class('w3-bar w3-large w3-theme-d4')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			$elm$html$Html$a,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$href('#'),
-					$elm$html$Html$Attributes$class('w3-bar-item w3-button')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$i,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('fa fa-bars')
-						]),
-					_List_Nil)
-				])),
-			A2(
-			$elm$html$Html$span,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('w3-bar-item')
-				]),
-			_List_fromArray(
-				[
-					$elm$html$Html$text('This is the start of my header')
-				]))
-		]));
-var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
-var $elm$html$Html$input = _VirtualDom_node('input');
-var $elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
-var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var $elm$html$Html$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			$elm$virtual_dom$VirtualDom$on,
-			event,
-			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var $elm$json$Json$Decode$field = _Json_decodeField;
-var $elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
-	});
-var $elm$json$Json$Decode$string = _Json_decodeString;
-var $elm$html$Html$Events$targetValue = A2(
-	$elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	$elm$json$Json$Decode$string);
-var $elm$html$Html$Events$onInput = function (tagger) {
-	return A2(
-		$elm$html$Html$Events$stopPropagationOn,
-		'input',
-		A2(
-			$elm$json$Json$Decode$map,
-			$elm$html$Html$Events$alwaysStop,
-			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
-};
-var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
-var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $author$project$Main$view = function (model) {
+var $author$project$Rests$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
-				$author$project$Main$header,
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						$elm$html$Html$Attributes$class('w3-container w3-content')
-					]),
-				_List_fromArray(
-					[
-						$author$project$Main$header,
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('w3-panel w3-white w3-card w3-display-container'),
-								$elm$html$Html$Attributes$id('parameters')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Total Flour '),
-										A2(
-										$elm$html$Html$input,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$placeholder('Total Flour'),
-												$elm$html$Html$Attributes$value(model.parameters.totalFlour),
-												$elm$html$Html$Events$onInput($author$project$Main$ChangeTotalFlour)
-											]),
-										_List_Nil)
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Hydration '),
-										A2(
-										$elm$html$Html$input,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$placeholder('Hydration'),
-												$elm$html$Html$Attributes$value(model.parameters.hydration),
-												$elm$html$Html$Events$onInput($author$project$Main$ChangeHydration)
-											]),
-										_List_Nil)
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Percent of starter '),
-										A2(
-										$elm$html$Html$input,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$placeholder('Percent of starter'),
-												$elm$html$Html$Attributes$value(model.parameters.starterPercent),
-												$elm$html$Html$Events$onInput($author$project$Main$ChangeStarter)
-											]),
-										_List_Nil)
-									]))
-							])),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('w3-panel w3-white w3-card w3-display-container'),
-								$elm$html$Html$Attributes$id('parameters')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Recipe Flour '),
-										$elm$html$Html$text(
-										$elm$core$String$fromInt(model.recipe.recipeFlour))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Recipe Water '),
-										$elm$html$Html$text(
-										$elm$core$String$fromInt(model.recipe.recipeWater))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Starter '),
-										$elm$html$Html$text(
-										$elm$core$String$fromInt(model.recipe.starterAmount))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Salt '),
-										$elm$html$Html$text(
-										$elm$core$String$fromInt(model.recipe.saltAmount))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text('Total Dough Weight '),
-										$elm$html$Html$text(
-										$elm$core$String$fromInt(model.recipe.totalDoughWeight))
-									]))
-							]))
-					]))
+				$elm$html$Html$text('Hello world')
 			]));
 };
-var $author$project$Main$main = $elm$browser$Browser$sandbox(
-	{init: $author$project$Main$init, update: $author$project$Main$update, view: $author$project$Main$view});
-_Platform_export({'Main':{'init':$author$project$Main$main(
+var $author$project$Rests$main = $elm$browser$Browser$sandbox(
+	{init: $author$project$Rests$init, update: $author$project$Rests$update, view: $author$project$Rests$view});
+_Platform_export({'Rests':{'init':$author$project$Rests$main(
 	$elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));

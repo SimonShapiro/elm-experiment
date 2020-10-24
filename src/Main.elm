@@ -1,10 +1,13 @@
 module Main exposing (..)
 import Browser
-import Html exposing (Html, button, div, text, input)
+import Html exposing (Html, button, div, text, input, a, i, span)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Html.Events exposing (onInput)
 import String exposing (toFloat)
+
+import Svg exposing (..)
+import Svg.Attributes exposing (..)
 
 
 type alias Model = 
@@ -92,31 +95,30 @@ update msg model =
       in
         {  parameters = parameters
         , recipe = convertRecipeForm parameters
-                          |> calculateRecipe 
+                    |> calculateRecipe 
         }
 
     ChangeHydration newHydration ->
       let 
-        parms = model.parameters
-        parameters = {parms | hydration = newHydration}
+        parameters = model.parameters |> \p -> {p | hydration = newHydration}
         recipe = calculateRecipe (convertRecipeForm parameters)
       in
         { parameters = parameters , recipe = recipe} 
 
     ChangeStarter newStarter ->
       let 
-        parms = model.parameters
-        parameters = {parms | starterPercent = newStarter}
+        parameters = model.parameters |> \p -> {p | starterPercent = newStarter}
         recipe = calculateRecipe (convertRecipeForm parameters)
       in
         { parameters = parameters , recipe = recipe} 
 
 -- class="w3-panel w3-white w3-card w3-display-container"
 view: Model->Html Msg
-view model =
-  div [class "w3-container w3-content"]
+view model = div [][ header
+  , div [class "w3-container w3-content"]
       [ 
-        div [class "w3-panel w3-white w3-card w3-display-container", id "parameters"][ 
+        header
+        , div [class "w3-panel w3-white w3-card w3-display-container", id "parameters"][ 
           div [][
           text "Total Flour "
           , input [placeholder "Total Flour", value model.parameters.totalFlour, onInput ChangeTotalFlour][]
@@ -152,4 +154,22 @@ view model =
             , text (String.fromInt model.recipe.totalDoughWeight)
           ]
         ]
-      ]
+      ]]
+
+--     <div class="w3-bar w3-large w3-theme-d4">
+      --   <a href="#" class="w3-bar-item w3-button"><i class="fa fa-bars"></i></a>
+      --   <span class="w3-bar-item">THE SOURDOUGH MASTER</span>
+      --   <a href="#" class="w3-bar-item w3-button w3-right"><i class="fa fa-search"></i></a>
+      -- </div>
+      
+
+header: Html msg
+header = div [class "w3-bar w3-large w3-theme-d4"]
+  [a [href "#", class "w3-bar-item w3-button"][i [class "fa fa-bars"] []]
+  , span [class "w3-bar-item"] [text "This is the start of my header"]
+  ]
+-- <svg width="400" height="110">
+--  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+-- </svg>
+block: Html msg
+block = svg [width "400", height "110"][rect [width "300" height "100" style "fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" ][]]
