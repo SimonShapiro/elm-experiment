@@ -12,9 +12,8 @@ import Svg.Attributes exposing (..)
 import Dict exposing(..)
 import Maybe exposing (Maybe)
 
-type alias Model =
+type alias ButtonPanel =
     Dict String ButtonInfo
-    
 
 type alias ButtonInfo =
     { colour: String
@@ -23,9 +22,20 @@ type alias ButtonInfo =
     , id: String
     }
 
+type Scene =
+    SelectingWorkout ButtonPanel
+
+workoutSelection: ButtonPanel
+workoutSelection = [("Strength", ButtonInfo "pink" "Strength" 1 "Strength")
+                    ,("Endurance", ButtonInfo "purple" "Endurance" 1 "Endurance")
+                    ]
+                    |> Dict.fromList
+
+type alias Model = 
+    Scene
 
 type Msg =
-    One String
+    One ButtonInfo
     
 defaultButton: ButtonInfo
 defaultButton = { colour = "black"
@@ -35,17 +45,7 @@ defaultButton = { colour = "black"
                 }
 
 init: Model
-init = [("b1", { colour = "orange"
-                    , label = "Button 1"
-                    , value = 1
-                    , id = "b1"
-                })
-        ,("b2", { colour = "purple"
-                    , label = "Button 2"
-                    , value = 1
-                    , id = "b2"
-                })] 
-        |> Dict.fromList
+init = SelectingWorkout workoutSelection
 
 main: Program () Model Msg
 main =
@@ -54,7 +54,11 @@ update: Msg->Model->Model
 update msg model =
     case msg of
        One id ->
-            Dict.update id (Maybe.map (\b ->  { b | colour = "green"}   )) model 
+        let
+            newPanel = (Dict.update id.id (Maybe.map (\b ->  { b | colour = "green"}   )) workoutSelection)
+        in
+            SelectingWorkout newPanel
+    --        SelectingWorkout  (Dict.update id.id (Maybe.map (\b ->  { b | colour = "green"}   )) workoutSelection)
             
             --Maybe.withDefault "No user" defaultButton 
             
@@ -65,11 +69,11 @@ update msg model =
 -- -- </svg>
 -- block: Html msg
 -- block = svg [width "400", height "110"][rect [width "300" height "100" style "fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" ][]]
-getButtonColour : String -> Model -> ButtonInfo
-getButtonColour id buttonDict =
-    buttonDict 
-    |> Dict.get id
-    |> Maybe.withDefault defaultButton
+getButtonInfo : String -> ButtonPanel -> ButtonInfo
+getButtonInfo id buttonDict =
+        buttonDict 
+        |> Dict.get id
+        |> Maybe.withDefault defaultButton
 --    |> get 
 --    |> Maybe.withDefault defaultButton.colour
 
@@ -81,10 +85,13 @@ header = div [class "w3-bar w3-large w3-theme-d4"]
   ]
 view: Model -> Html Msg
 view model = 
-    div [][header
-            , shape <| getButtonColour "b2" model
-            , shape <| getButtonColour "b1" model
-        ]
+    case model of
+       SelectingWorkout buttons -> 
+--        Debug.log ("There" ++ (getButtonInfo "Endurance" buttons).colour)
+        div [][header
+                , div [] [shape <| getButtonInfo "Strength" buttons] -- orange
+                , div [] [shape <| getButtonInfo "Endurance" buttons]
+            ]
 
 shape: ButtonInfo->Html Msg
 shape  info =
@@ -101,7 +108,7 @@ shape  info =
         , rx "15"
         , ry "15"
         , fill info.colour
-        , onClick (One info.id)
+        , onClick (One info)
         , id info.id
         ]
         []

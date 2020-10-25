@@ -4355,6 +4355,12 @@ function _Browser_load(url)
 		}
 	}));
 }
+var $elm$core$Basics$identity = function (x) {
+	return x;
+};
+var $author$project$Rests$SelectingWorkout = function (a) {
+	return {$: 'SelectingWorkout', a: a};
+};
 var $elm$core$List$cons = _List_cons;
 var $elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var $elm$core$Array$foldr = F3(
@@ -4435,6 +4441,10 @@ var $elm$core$Set$toList = function (_v0) {
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
+var $author$project$Rests$ButtonInfo = F4(
+	function (colour, label, value, id) {
+		return {colour: colour, id: id, label: label, value: value};
+	});
 var $elm$core$Basics$apR = F2(
 	function (x, f) {
 		return f(x);
@@ -4581,16 +4591,17 @@ var $elm$core$Dict$fromList = function (assocs) {
 		$elm$core$Dict$empty,
 		assocs);
 };
-var $author$project$Rests$init = $elm$core$Dict$fromList(
+var $author$project$Rests$workoutSelection = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
 			_Utils_Tuple2(
-			'b1',
-			{colour: 'orange', id: 'b1', label: 'Button 1', value: 1}),
+			'Strength',
+			A4($author$project$Rests$ButtonInfo, 'pink', 'Strength', 1, 'Strength')),
 			_Utils_Tuple2(
-			'b2',
-			{colour: 'purple', id: 'b2', label: 'Button 2', value: 1})
+			'Endurance',
+			A4($author$project$Rests$ButtonInfo, 'purple', 'Endurance', 1, 'Endurance'))
 		]));
+var $author$project$Rests$init = $author$project$Rests$SelectingWorkout($author$project$Rests$workoutSelection);
 var $elm$core$Result$Err = function (a) {
 	return {$: 'Err', a: a};
 };
@@ -4984,9 +4995,6 @@ var $elm$browser$Browser$External = function (a) {
 var $elm$browser$Browser$Internal = function (a) {
 	return {$: 'Internal', a: a};
 };
-var $elm$core$Basics$identity = function (x) {
-	return x;
-};
 var $elm$browser$Browser$Dom$NotFound = function (a) {
 	return {$: 'NotFound', a: a};
 };
@@ -5298,7 +5306,16 @@ var $elm$browser$Browser$sandbox = function (impl) {
 			view: impl.view
 		});
 };
-var $author$project$Rests$defaultButton = {colour: 'black', id: 'xx', label: 'Default', value: 0};
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
 var $elm$core$Dict$get = F2(
 	function (targetKey, dict) {
 		get:
@@ -5328,32 +5345,6 @@ var $elm$core$Dict$get = F2(
 						continue get;
 				}
 			}
-		}
-	});
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$Rests$getButtonColour = F2(
-	function (id, buttonDict) {
-		return A2(
-			$elm$core$Maybe$withDefault,
-			$author$project$Rests$defaultButton,
-			A2($elm$core$Dict$get, id, buttonDict));
-	});
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
 		}
 	});
 var $elm$core$Dict$getMin = function (dict) {
@@ -5732,24 +5723,36 @@ var $elm$core$Dict$update = F3(
 var $author$project$Rests$update = F2(
 	function (msg, model) {
 		var id = msg.a;
-		var updatedButton = function (b) {
-			return _Utils_update(
-				b,
-				{colour: 'green'});
-		}(
-			A2($author$project$Rests$getButtonColour, id, model));
-		return A3(
+		var newPanel = A3(
 			$elm$core$Dict$update,
-			id,
+			id.id,
 			$elm$core$Maybe$map(
 				function (b) {
 					return _Utils_update(
 						b,
 						{colour: 'green'});
 				}),
-			model);
+			$author$project$Rests$workoutSelection);
+		return $author$project$Rests$SelectingWorkout(newPanel);
 	});
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $author$project$Rests$defaultButton = {colour: 'black', id: 'xx', label: 'Default', value: 0};
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Rests$getButtonInfo = F2(
+	function (id, buttonDict) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			$author$project$Rests$defaultButton,
+			A2($elm$core$Dict$get, id, buttonDict));
+	});
 var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var $elm$json$Json$Encode$string = _Json_wrap;
@@ -5806,6 +5809,7 @@ var $author$project$Rests$header = A2(
 					$elm$html$Html$text('RESTS & SETS')
 				]))
 		]));
+var $elm$core$Debug$log = _Debug_log;
 var $author$project$Rests$One = function (a) {
 	return {$: 'One', a: a};
 };
@@ -5861,23 +5865,38 @@ var $author$project$Rests$shape = function (info) {
 						$elm$svg$Svg$Attributes$ry('15'),
 						$elm$svg$Svg$Attributes$fill(info.colour),
 						$elm$html$Html$Events$onClick(
-						$author$project$Rests$One(info.id)),
+						$author$project$Rests$One(info)),
 						$elm$svg$Svg$Attributes$id(info.id)
 					]),
 				_List_Nil)
 			]));
 };
 var $author$project$Rests$view = function (model) {
-	return A2(
+	var buttons = model.a;
+	return A4(
+		$elm$core$Debug$log,
+		'There' + A2($author$project$Rests$getButtonInfo, 'Endurance', buttons).colour,
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
 				$author$project$Rests$header,
-				$author$project$Rests$shape(
-				A2($author$project$Rests$getButtonColour, 'b2', model)),
-				$author$project$Rests$shape(
-				A2($author$project$Rests$getButtonColour, 'b1', model))
+				A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$author$project$Rests$shape(
+						A2($author$project$Rests$getButtonInfo, 'Strength', buttons))
+					])),
+				A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$author$project$Rests$shape(
+						A2($author$project$Rests$getButtonInfo, 'Endurance', buttons))
+					]))
 			]));
 };
 var $author$project$Rests$main = $elm$browser$Browser$sandbox(
