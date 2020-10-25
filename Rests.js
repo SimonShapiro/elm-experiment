@@ -4355,9 +4355,6 @@ function _Browser_load(url)
 		}
 	}));
 }
-var $elm$core$Basics$identity = function (x) {
-	return x;
-};
 var $author$project$Rests$SelectingWorkout = function (a) {
 	return {$: 'SelectingWorkout', a: a};
 };
@@ -4596,10 +4593,22 @@ var $author$project$Rests$workoutSelection = $elm$core$Dict$fromList(
 		[
 			_Utils_Tuple2(
 			'Strength',
-			A4($author$project$Rests$ButtonInfo, 'pink', 'Strength', 1, 'Strength')),
+			A4(
+				$author$project$Rests$ButtonInfo,
+				'pink',
+				'Strength',
+				_List_fromArray(
+					[1, 3, 4]),
+				'Strength')),
 			_Utils_Tuple2(
 			'Endurance',
-			A4($author$project$Rests$ButtonInfo, 'purple', 'Endurance', 1, 'Endurance'))
+			A4(
+				$author$project$Rests$ButtonInfo,
+				'purple',
+				'Endurance',
+				_List_fromArray(
+					[6, 7, 8, 9]),
+				'Endurance'))
 		]));
 var $author$project$Rests$init = $author$project$Rests$SelectingWorkout($author$project$Rests$workoutSelection);
 var $elm$core$Result$Err = function (a) {
@@ -4995,6 +5004,9 @@ var $elm$browser$Browser$External = function (a) {
 var $elm$browser$Browser$Internal = function (a) {
 	return {$: 'Internal', a: a};
 };
+var $elm$core$Basics$identity = function (x) {
+	return x;
+};
 var $elm$browser$Browser$Dom$NotFound = function (a) {
 	return {$: 'NotFound', a: a};
 };
@@ -5306,16 +5318,10 @@ var $elm$browser$Browser$sandbox = function (impl) {
 			view: impl.view
 		});
 };
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
+var $author$project$Rests$SelectingSets = function (a) {
+	return {$: 'SelectingSets', a: a};
+};
+var $author$project$Rests$defaultButton = {colour: 'black', id: 'xx', label: 'Default', value: _List_Nil};
 var $elm$core$Dict$get = F2(
 	function (targetKey, dict) {
 		get:
@@ -5345,6 +5351,16 @@ var $elm$core$Dict$get = F2(
 						continue get;
 				}
 			}
+		}
+	});
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
 		}
 	});
 var $elm$core$Dict$getMin = function (dict) {
@@ -5720,23 +5736,6 @@ var $elm$core$Dict$update = F3(
 			return A2($elm$core$Dict$remove, targetKey, dictionary);
 		}
 	});
-var $author$project$Rests$update = F2(
-	function (msg, model) {
-		var id = msg.a;
-		var newPanel = A3(
-			$elm$core$Dict$update,
-			id.id,
-			$elm$core$Maybe$map(
-				function (b) {
-					return _Utils_update(
-						b,
-						{colour: 'green'});
-				}),
-			$author$project$Rests$workoutSelection);
-		return $author$project$Rests$SelectingWorkout(newPanel);
-	});
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $author$project$Rests$defaultButton = {colour: 'black', id: 'xx', label: 'Default', value: 0};
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -5746,6 +5745,31 @@ var $elm$core$Maybe$withDefault = F2(
 			return _default;
 		}
 	});
+var $author$project$Rests$update = F2(
+	function (msg, model) {
+		if (msg.$ === 'One') {
+			var id = msg.a;
+			var newPanel = A3(
+				$elm$core$Dict$update,
+				id.id,
+				$elm$core$Maybe$map(
+					function (b) {
+						return _Utils_update(
+							b,
+							{colour: 'green'});
+					}),
+				$author$project$Rests$workoutSelection);
+			return $author$project$Rests$SelectingSets(
+				A2(
+					$elm$core$Maybe$withDefault,
+					$author$project$Rests$defaultButton,
+					A2($elm$core$Dict$get, id.id, $author$project$Rests$workoutSelection)).value);
+		} else {
+			var n = msg.a;
+			return $author$project$Rests$SelectingSets(_List_Nil);
+		}
+	});
+var $elm$html$Html$div = _VirtualDom_node('div');
 var $author$project$Rests$getButtonInfo = F2(
 	function (id, buttonDict) {
 		return A2(
@@ -5809,7 +5833,6 @@ var $author$project$Rests$header = A2(
 					$elm$html$Html$text('RESTS & SETS')
 				]))
 		]));
-var $elm$core$Debug$log = _Debug_log;
 var $author$project$Rests$One = function (a) {
 	return {$: 'One', a: a};
 };
@@ -5871,33 +5894,88 @@ var $author$project$Rests$shape = function (info) {
 				_List_Nil)
 			]));
 };
+var $author$project$Rests$SetsChosen = function (a) {
+	return {$: 'SetsChosen', a: a};
+};
+var $author$project$Rests$shapeChoiceOfSets = function (choice) {
+	return A2(
+		$elm$core$List$map,
+		function (c) {
+			return A2(
+				$elm$svg$Svg$svg,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$width('120'),
+						$elm$svg$Svg$Attributes$height('120'),
+						$elm$svg$Svg$Attributes$viewBox('0 0 120 120')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$rect,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$x('10'),
+								$elm$svg$Svg$Attributes$y('10'),
+								$elm$svg$Svg$Attributes$width('100'),
+								$elm$svg$Svg$Attributes$height('100'),
+								$elm$svg$Svg$Attributes$rx('15'),
+								$elm$svg$Svg$Attributes$ry('15'),
+								$elm$svg$Svg$Attributes$fill('grey'),
+								$elm$html$Html$Events$onClick(
+								$author$project$Rests$SetsChosen(c)),
+								$elm$svg$Svg$Attributes$id(
+								$elm$core$String$fromInt(c))
+							]),
+						_List_Nil)
+					]));
+		},
+		choice);
+};
 var $author$project$Rests$view = function (model) {
-	var buttons = model.a;
-	return A4(
-		$elm$core$Debug$log,
-		'There' + A2($author$project$Rests$getButtonInfo, 'Endurance', buttons).colour,
-		$elm$html$Html$div,
-		_List_Nil,
-		_List_fromArray(
-			[
-				$author$project$Rests$header,
-				A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$author$project$Rests$shape(
-						A2($author$project$Rests$getButtonInfo, 'Strength', buttons))
-					])),
-				A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$author$project$Rests$shape(
-						A2($author$project$Rests$getButtonInfo, 'Endurance', buttons))
-					]))
-			]));
+	if (model.$ === 'SelectingWorkout') {
+		var buttons = model.a;
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$author$project$Rests$header,
+					A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$author$project$Rests$shape(
+							A2($author$project$Rests$getButtonInfo, 'Strength', buttons))
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$author$project$Rests$shape(
+							A2($author$project$Rests$getButtonInfo, 'Endurance', buttons))
+						]))
+				]));
+	} else {
+		var choice = model.a;
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[$author$project$Rests$header])),
+					A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					$author$project$Rests$shapeChoiceOfSets(choice))
+				]));
+	}
 };
 var $author$project$Rests$main = $elm$browser$Browser$sandbox(
 	{init: $author$project$Rests$init, update: $author$project$Rests$update, view: $author$project$Rests$view});

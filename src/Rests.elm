@@ -15,19 +15,25 @@ import Maybe exposing (Maybe)
 type alias ButtonPanel =
     Dict String ButtonInfo
 
+type alias ChoiceOfSets =
+    List Int
+
+
+
 type alias ButtonInfo =
     { colour: String
     , label: String
-    , value: Int
+    , value: ChoiceOfSets
     , id: String
     }
 
 type Scene =
     SelectingWorkout ButtonPanel
+    | SelectingSets ChoiceOfSets
 
 workoutSelection: ButtonPanel
-workoutSelection = [("Strength", ButtonInfo "pink" "Strength" 1 "Strength")
-                    ,("Endurance", ButtonInfo "purple" "Endurance" 1 "Endurance")
+workoutSelection = [("Strength", ButtonInfo "pink" "Strength" [1, 3, 4] "Strength")
+                    ,("Endurance", ButtonInfo "purple" "Endurance" [6, 7, 8, 9] "Endurance")
                     ]
                     |> Dict.fromList
 
@@ -36,11 +42,12 @@ type alias Model =
 
 type Msg =
     One ButtonInfo
+    | SetsChosen Int
     
 defaultButton: ButtonInfo
 defaultButton = { colour = "black"
                 ,  label = "Default"
-                ,  value = 0
+                ,  value = []
                 ,  id = "xx"
                 }
 
@@ -53,11 +60,16 @@ main =
 update: Msg->Model->Model
 update msg model =
     case msg of
-       One id ->
-        let
-            newPanel = (Dict.update id.id (Maybe.map (\b ->  { b | colour = "green"}   )) workoutSelection)
-        in
-            SelectingWorkout newPanel
+        One id ->
+            let
+                newPanel = (Dict.update id.id (Maybe.map (\b ->  { b | colour = "green"}   )) workoutSelection)
+            in
+                SelectingSets (workoutSelection 
+                                |> Dict.get id.id
+                                |> Maybe.withDefault defaultButton).value
+
+        SetsChosen n ->
+            SelectingSets []
     --        SelectingWorkout  (Dict.update id.id (Maybe.map (\b ->  { b | colour = "green"}   )) workoutSelection)
             
             --Maybe.withDefault "No user" defaultButton 
@@ -86,12 +98,18 @@ header = div [class "w3-bar w3-large w3-theme-d4"]
 view: Model -> Html Msg
 view model = 
     case model of
-       SelectingWorkout buttons -> 
+        SelectingWorkout buttons -> 
 --        Debug.log ("There" ++ (getButtonInfo "Endurance" buttons).colour)
-        div [][header
+            div [][header
                 , div [] [shape <| getButtonInfo "Strength" buttons] -- orange
                 , div [] [shape <| getButtonInfo "Endurance" buttons]
             ]
+        SelectingSets choice ->
+            div [][
+                div [][header]
+                , div [] (shapeChoiceOfSets choice)
+            ]
+
 
 shape: ButtonInfo->Html Msg
 shape  info =
@@ -113,3 +131,27 @@ shape  info =
         ]
         []
     ]
+
+shapeChoiceOfSets: ChoiceOfSets->List (Html Msg)
+shapeChoiceOfSets choice = 
+    List.map (\c -> 
+        svg
+    [ width "120"
+    , height "120"
+    , viewBox "0 0 120 120"
+    ]
+    [ rect
+        [ x "10"
+        , y "10"
+        , width "100"
+        , height "100"
+        , rx "15"
+        , ry "15"
+        , fill "grey"
+        , onClick (SetsChosen c)
+        , id (String.fromInt c)
+        ]
+        []
+    ]
+    ) choice
+
