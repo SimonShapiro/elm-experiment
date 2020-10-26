@@ -37,8 +37,9 @@ type alias ButtonInfo =
 
 type Scene =
     SelectingWorkout ButtonPanel
-    | SelectingSets ButtonInfo
-    | SelectingRests ButtonInfo
+    | SelectingSets ButtonInfo 
+    | SelectingRests ButtonInfo String
+    | Training ButtonInfo String String
 
 -- [TimeConfig(60, "60sec"), TimeConfig(90, "90sec"), TimeConfig(120, "2mins"), TimeConfig(300, "5mins")]
 restGroup1: ChoiceOfRests
@@ -60,8 +61,8 @@ type alias Model =
 
 type Msg =
     One ButtonInfo
-    | SetsChosen ButtonInfo
-    | RestsChosen ButtonInfo
+    | SetsChosen ButtonInfo String
+    | RestsChosen ButtonInfo String String
     
 defaultButton: ButtonInfo
 defaultButton = { colour = "black"
@@ -81,17 +82,13 @@ update: Msg->Model->Model
 update msg model =
     case msg of
         One id ->
-            let
-                newPanel = (Dict.update id.id (Maybe.map (\b ->  { b | colour = "green"}   )) workoutSelection)
-            in
-                SelectingSets (workoutSelection 
-                                |> Dict.get id.id
-                                |> Maybe.withDefault defaultButton)
-
-        SetsChosen button ->
-            SelectingRests button
-        RestsChosen button ->
-            SelectingRests button
+            SelectingSets (workoutSelection 
+                            |> Dict.get id.id
+                            |> Maybe.withDefault defaultButton)
+        SetsChosen button sets ->
+            SelectingRests button sets
+        RestsChosen button sets rest ->
+            Training button sets rest
     --        SelectingWorkout  (Dict.update id.id (Maybe.map (\b ->  { b | colour = "green"}   )) workoutSelection)
             
             --Maybe.withDefault "No user" defaultButton 
@@ -133,11 +130,13 @@ view model =
                 div [][header]
                 , div [] (shapeChoiceOfSets choice)
             ]
-        SelectingRests choice -> 
+        SelectingRests choice sets -> 
             div [][
                 div [][header]
-                    , div [] (shapeChoiceOfRests choice)
+                    , div [] (shapeChoiceOfRests choice sets)
                 ]
+        Training choice sets rest->
+            div [][Html.text ("Training"++sets++rest)]
 
 
 shape: ButtonInfo->Html Msg
@@ -170,7 +169,7 @@ shape  info =
 shapeChoiceOfSets: ButtonInfo->List (Html Msg)
 shapeChoiceOfSets button = 
     let
-        sets = button.value
+        setList = button.value
     in
         
         List.map (\c -> 
@@ -178,7 +177,7 @@ shapeChoiceOfSets button =
             [ width "120"
             , height "120"
             , viewBox "0 0 120 120"
-            , onClick (SetsChosen button)
+            , onClick (SetsChosen button (String.fromInt c))
             ]
             [ rect
                 [ x "10"
@@ -199,19 +198,19 @@ shapeChoiceOfSets button =
             [Html.text (String.fromInt c)]  
     
             ]
-        ) sets
+        ) setList
 
-shapeChoiceOfRests: ButtonInfo->List (Html Msg)
-shapeChoiceOfRests button = 
+shapeChoiceOfRests: ButtonInfo->String->List (Html Msg)
+shapeChoiceOfRests button setsChosen = 
     let
-        rests = button.rest
+        restsList = button.rest
     in
     List.map (\c -> 
     svg
         [ width "300"
         , height "120"
         , viewBox "0 0 300 120"
-        , onClick (RestsChosen button)
+        , onClick (RestsChosen button setsChosen (String.fromInt c.seconds))
         ]
         [ rect
             [ x "10"
@@ -233,4 +232,4 @@ shapeChoiceOfRests button =
         ]  
   
         ]
-    ) rests
+    ) restsList
