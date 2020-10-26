@@ -5415,6 +5415,8 @@ var $author$project$Rests$update = F2(
 		}
 	});
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
 var $author$project$Rests$getButtonInfo = F2(
 	function (id, buttonDict) {
 		return A2(
@@ -5478,13 +5480,15 @@ var $author$project$Rests$header = A2(
 					$elm$html$Html$text('RESTS & SETS')
 				]))
 		]));
+var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
+var $elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
+var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
+var $elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
+var $elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
 var $author$project$Rests$One = function (a) {
 	return {$: 'One', a: a};
 };
-var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
-var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var $elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5502,10 +5506,6 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
-var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
-var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
-var $elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
-var $elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
@@ -5744,7 +5744,87 @@ var $author$project$Rests$view = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Training' + (sets + rest))
+						$elm$html$Html$text('Training' + (' ' + (sets + (':' + rest)))),
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm$svg$Svg$svg,
+								_List_fromArray(
+									[
+										$elm$svg$Svg$Attributes$width('200'),
+										$elm$svg$Svg$Attributes$height('120'),
+										$elm$svg$Svg$Attributes$viewBox('0 0 200 120')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$svg$Svg$rect,
+										_List_fromArray(
+											[
+												$elm$svg$Svg$Attributes$x('10'),
+												$elm$svg$Svg$Attributes$y('10'),
+												$elm$svg$Svg$Attributes$width('180'),
+												$elm$svg$Svg$Attributes$height('90'),
+												$elm$svg$Svg$Attributes$rx('15'),
+												$elm$svg$Svg$Attributes$ry('15'),
+												$elm$svg$Svg$Attributes$fill('lightblue'),
+												$elm$svg$Svg$Attributes$id(sets + (':' + rest))
+											]),
+										_List_Nil),
+										A2(
+										$elm$svg$Svg$text_,
+										_List_fromArray(
+											[
+												$elm$svg$Svg$Attributes$x('45'),
+												$elm$svg$Svg$Attributes$y('63'),
+												$elm$svg$Svg$Attributes$fontSize('30px')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Resting')
+											]))
+									])),
+								A2(
+								$elm$svg$Svg$svg,
+								_List_fromArray(
+									[
+										$elm$svg$Svg$Attributes$width('200'),
+										$elm$svg$Svg$Attributes$height('120'),
+										$elm$svg$Svg$Attributes$viewBox('0 0 200 120')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$svg$Svg$rect,
+										_List_fromArray(
+											[
+												$elm$svg$Svg$Attributes$x('10'),
+												$elm$svg$Svg$Attributes$y('10'),
+												$elm$svg$Svg$Attributes$width('180'),
+												$elm$svg$Svg$Attributes$height('90'),
+												$elm$svg$Svg$Attributes$rx('15'),
+												$elm$svg$Svg$Attributes$ry('15'),
+												$elm$svg$Svg$Attributes$fill('lightblue'),
+												$elm$svg$Svg$Attributes$id(sets + (':' + rest))
+											]),
+										_List_Nil),
+										A2(
+										$elm$svg$Svg$text_,
+										_List_fromArray(
+											[
+												$elm$svg$Svg$Attributes$x('45'),
+												$elm$svg$Svg$Attributes$y('63'),
+												$elm$svg$Svg$Attributes$fontSize('30px')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Rested')
+											]))
+									]))
+							]))
 					]));
 	}
 };

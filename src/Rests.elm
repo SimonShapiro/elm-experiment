@@ -136,7 +136,61 @@ view model =
                     , div [] (shapeChoiceOfRests choice sets)
                 ]
         Training choice sets rest->
-            div [][Html.text ("Training"++sets++rest)]
+            div [][Html.text ("Training"++" "++sets++":"++rest)
+                    , div [][
+                        svg [ width "200"
+                            , height "120"
+                            , viewBox "0 0 200 120"
+                    --        , onClick (RestsChosen button setsChosen (String.fromInt c.seconds))
+                            ]
+                            [ rect
+                                [ x "10"
+                                , y "10"
+                                , width "180"
+                                , height "90"
+                                , rx "15"
+                                , ry "15"
+                                , fill "lightblue"
+                                , id (sets++":"++rest)
+                                ]
+                                []
+                            , text_
+                                    [ x "45"
+                                    , y "63"
+                                    , fontSize "30px"
+                                ]
+                            [Html.text "Resting"
+                            ]  
+        
+                       ]
+                        , svg [ width "200"
+                            , height "120"
+                            , viewBox "0 0 200 120"
+                    --        , onClick (RestsChosen button setsChosen (String.fromInt c.seconds))
+                            ]
+                            [ rect
+                                [ x "10"
+                                , y "10"
+                                , width "180"
+                                , height "90"
+                                , rx "15"
+                                , ry "15"
+                                , fill "lightblue"
+                                , id (sets++":"++rest)
+                                ]
+                                []
+                            , text_
+                                    [ x "45"
+                                    , y "63"
+                                    , fontSize "30px"
+                                ]
+                            [Html.text "Rested"
+                            ]  
+                            ]
+        
+                       ]
+                    ]
+            
 
 
 shape: ButtonInfo->Html Msg
