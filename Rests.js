@@ -4596,7 +4596,7 @@ var $author$project$Rests$workoutSelection = $elm$core$Dict$fromList(
 			A4(
 				$author$project$Rests$ButtonInfo,
 				'pink',
-				'Strength',
+				'S',
 				_List_fromArray(
 					[1, 3, 5, 6, 10]),
 				'Strength')),
@@ -4605,7 +4605,7 @@ var $author$project$Rests$workoutSelection = $elm$core$Dict$fromList(
 			A4(
 				$author$project$Rests$ButtonInfo,
 				'purple',
-				'Endurance',
+				'E',
 				_List_fromArray(
 					[2, 3]),
 				'Endurance')),
@@ -4614,7 +4614,7 @@ var $author$project$Rests$workoutSelection = $elm$core$Dict$fromList(
 			A4(
 				$author$project$Rests$ButtonInfo,
 				'red',
-				'Hyper',
+				'H',
 				_List_fromArray(
 					[3, 4]),
 				'Hyper'))
@@ -5846,6 +5846,7 @@ var $author$project$Rests$One = function (a) {
 	return {$: 'One', a: a};
 };
 var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var $elm$svg$Svg$Attributes$fontSize = _VirtualDom_attribute('font-size');
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -5870,6 +5871,7 @@ var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
 var $elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
 var $elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
+var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
 var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
@@ -5900,7 +5902,19 @@ var $author$project$Rests$shape = function (info) {
 						$author$project$Rests$One(info)),
 						$elm$svg$Svg$Attributes$id(info.id)
 					]),
-				_List_Nil)
+				_List_Nil),
+				A2(
+				$elm$svg$Svg$text_,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$x('43'),
+						$elm$svg$Svg$Attributes$y('77'),
+						$elm$svg$Svg$Attributes$fontSize('50px')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(info.label)
+					]))
 			]));
 };
 var $author$project$Rests$SetsChosen = function (a) {

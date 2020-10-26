@@ -32,9 +32,9 @@ type Scene =
     | SelectingSets ChoiceOfSets
 
 workoutSelection: ButtonPanel
-workoutSelection = [("Strength", ButtonInfo "pink" "Strength" [1, 3, 5, 6, 10] "Strength")
-                    ,("Endurance", ButtonInfo "purple" "Endurance" [2, 3] "Endurance")
-                    ,("Hyper", ButtonInfo "red" "Hyper" [3, 4] "Hyper")
+workoutSelection = [("Strength", ButtonInfo "pink" "S" [1, 3, 5, 6, 10] "Strength")
+                    ,("Endurance", ButtonInfo "purple" "E" [2, 3] "Endurance")
+                    ,("Hyper", ButtonInfo "red" "H" [3, 4] "Hyper")
                     ]
                     |> Dict.fromList
 
@@ -133,6 +133,12 @@ shape  info =
         , id info.id
         ]
         []
+      , text_
+        [ x "43"
+        , y "77"
+        , fontSize "50px"
+        ]
+        [Html.text info.label]  
     ]
 
 shapeChoiceOfSets: ChoiceOfSets->List (Html Msg)
