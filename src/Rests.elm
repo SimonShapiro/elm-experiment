@@ -18,23 +18,40 @@ type alias ButtonPanel =
 type alias ChoiceOfSets =
     List Int
 
+type alias RestPeriod =
+    {
+        seconds: Int,
+        label: String
+    }
 
+type alias ChoiceOfRests =
+    List RestPeriod
 
 type alias ButtonInfo =
     { colour: String
     , label: String
     , value: ChoiceOfSets
     , id: String
+    , rest: ChoiceOfRests
     }
 
 type Scene =
     SelectingWorkout ButtonPanel
-    | SelectingSets ChoiceOfSets
+    | SelectingSets ButtonInfo
+    | SelectingRests ButtonInfo
+
+-- [TimeConfig(60, "60sec"), TimeConfig(90, "90sec"), TimeConfig(120, "2mins"), TimeConfig(300, "5mins")]
+restGroup1: ChoiceOfRests
+restGroup1 = [RestPeriod 60 "60sec"
+                , RestPeriod 90 "90sec"
+                , RestPeriod 120 "2mins"
+                , RestPeriod 300 "5mins"
+                ]
 
 workoutSelection: ButtonPanel
-workoutSelection = [("Strength", ButtonInfo "pink" "S" [1, 3, 5, 6, 10] "Strength")
-                    ,("Endurance", ButtonInfo "purple" "E" [2, 3] "Endurance")
-                    ,("Hyper", ButtonInfo "red" "H" [3, 4] "Hyper")
+workoutSelection = [("Strength", ButtonInfo "pink" "S" [1, 3, 5, 6, 10] "Strength" restGroup1)
+                    ,("Endurance", ButtonInfo "purple" "E" [2, 3] "Endurance" restGroup1)
+                    ,("Hyper", ButtonInfo "red" "H" [3, 4] "Hyper" restGroup1)
                     ]
                     |> Dict.fromList
 
@@ -43,13 +60,15 @@ type alias Model =
 
 type Msg =
     One ButtonInfo
-    | SetsChosen Int
+    | SetsChosen ButtonInfo
+    | RestsChosen ButtonInfo
     
 defaultButton: ButtonInfo
 defaultButton = { colour = "black"
                 ,  label = "Default"
                 ,  value = []
                 ,  id = "xx"
+                ,  rest = []
                 }
 
 init: Model
@@ -67,10 +86,12 @@ update msg model =
             in
                 SelectingSets (workoutSelection 
                                 |> Dict.get id.id
-                                |> Maybe.withDefault defaultButton).value
+                                |> Maybe.withDefault defaultButton)
 
-        SetsChosen n ->
-            SelectingSets []
+        SetsChosen button ->
+            SelectingRests button
+        RestsChosen button ->
+            SelectingRests button
     --        SelectingWorkout  (Dict.update id.id (Maybe.map (\b ->  { b | colour = "green"}   )) workoutSelection)
             
             --Maybe.withDefault "No user" defaultButton 
@@ -112,6 +133,11 @@ view model =
                 div [][header]
                 , div [] (shapeChoiceOfSets choice)
             ]
+        SelectingRests choice -> 
+            div [][
+                div [][header]
+                    , div [] (shapeChoiceOfRests choice)
+                ]
 
 
 shape: ButtonInfo->Html Msg
@@ -141,24 +167,61 @@ shape  info =
         [Html.text info.label]  
     ]
 
-shapeChoiceOfSets: ChoiceOfSets->List (Html Msg)
-shapeChoiceOfSets choice = 
+shapeChoiceOfSets: ButtonInfo->List (Html Msg)
+shapeChoiceOfSets button = 
+    let
+        sets = button.value
+    in
+        
+        List.map (\c -> 
+        svg
+            [ width "120"
+            , height "120"
+            , viewBox "0 0 120 120"
+            , onClick (SetsChosen button)
+            ]
+            [ rect
+                [ x "10"
+                , y "10"
+                , width "100"
+                , height "100"
+                , rx "15"
+                , ry "15"
+                , fill "grey"
+                , id (String.fromInt c)
+                ]
+                []
+            , text_
+                    [ x "43"
+                    , y "77"
+                    , fontSize "50px"
+                ]
+            [Html.text (String.fromInt c)]  
+    
+            ]
+        ) sets
+
+shapeChoiceOfRests: ButtonInfo->List (Html Msg)
+shapeChoiceOfRests button = 
+    let
+        rests = button.rest
+    in
     List.map (\c -> 
     svg
-        [ width "120"
+        [ width "300"
         , height "120"
-        , viewBox "0 0 120 120"
-        , onClick (SetsChosen c)
+        , viewBox "0 0 300 120"
+        , onClick (RestsChosen button)
         ]
         [ rect
             [ x "10"
             , y "10"
-            , width "100"
+            , width "200"
             , height "100"
             , rx "15"
             , ry "15"
-            , fill "grey"
-            , id (String.fromInt c)
+            , fill "lightblue"
+            , id c.label
             ]
             []
           , text_
@@ -166,8 +229,8 @@ shapeChoiceOfSets choice =
                 , y "77"
                 , fontSize "50px"
             ]
-        [Html.text (String.fromInt c)]  
+        [Html.text c.label
+        ]  
   
         ]
-    ) choice
-
+    ) rests

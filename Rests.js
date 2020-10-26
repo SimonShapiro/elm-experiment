@@ -4438,9 +4438,9 @@ var $elm$core$Set$toList = function (_v0) {
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
-var $author$project$Rests$ButtonInfo = F4(
-	function (colour, label, value, id) {
-		return {colour: colour, id: id, label: label, value: value};
+var $author$project$Rests$ButtonInfo = F5(
+	function (colour, label, value, id, rest) {
+		return {colour: colour, id: id, label: label, rest: rest, value: value};
 	});
 var $elm$core$Basics$apR = F2(
 	function (x, f) {
@@ -4588,36 +4588,50 @@ var $elm$core$Dict$fromList = function (assocs) {
 		$elm$core$Dict$empty,
 		assocs);
 };
+var $author$project$Rests$RestPeriod = F2(
+	function (seconds, label) {
+		return {label: label, seconds: seconds};
+	});
+var $author$project$Rests$restGroup1 = _List_fromArray(
+	[
+		A2($author$project$Rests$RestPeriod, 60, '60sec'),
+		A2($author$project$Rests$RestPeriod, 90, '90sec'),
+		A2($author$project$Rests$RestPeriod, 120, '2mins'),
+		A2($author$project$Rests$RestPeriod, 300, '5mins')
+	]);
 var $author$project$Rests$workoutSelection = $elm$core$Dict$fromList(
 	_List_fromArray(
 		[
 			_Utils_Tuple2(
 			'Strength',
-			A4(
+			A5(
 				$author$project$Rests$ButtonInfo,
 				'pink',
 				'S',
 				_List_fromArray(
 					[1, 3, 5, 6, 10]),
-				'Strength')),
+				'Strength',
+				$author$project$Rests$restGroup1)),
 			_Utils_Tuple2(
 			'Endurance',
-			A4(
+			A5(
 				$author$project$Rests$ButtonInfo,
 				'purple',
 				'E',
 				_List_fromArray(
 					[2, 3]),
-				'Endurance')),
+				'Endurance',
+				$author$project$Rests$restGroup1)),
 			_Utils_Tuple2(
 			'Hyper',
-			A4(
+			A5(
 				$author$project$Rests$ButtonInfo,
 				'red',
 				'H',
 				_List_fromArray(
 					[3, 4]),
-				'Hyper'))
+				'Hyper',
+				$author$project$Rests$restGroup1))
 		]));
 var $author$project$Rests$init = $author$project$Rests$SelectingWorkout($author$project$Rests$workoutSelection);
 var $elm$core$Result$Err = function (a) {
@@ -5327,10 +5341,13 @@ var $elm$browser$Browser$sandbox = function (impl) {
 			view: impl.view
 		});
 };
+var $author$project$Rests$SelectingRests = function (a) {
+	return {$: 'SelectingRests', a: a};
+};
 var $author$project$Rests$SelectingSets = function (a) {
 	return {$: 'SelectingSets', a: a};
 };
-var $author$project$Rests$defaultButton = {colour: 'black', id: 'xx', label: 'Default', value: _List_Nil};
+var $author$project$Rests$defaultButton = {colour: 'black', id: 'xx', label: 'Default', rest: _List_Nil, value: _List_Nil};
 var $elm$core$Dict$get = F2(
 	function (targetKey, dict) {
 		get:
@@ -5756,26 +5773,30 @@ var $elm$core$Maybe$withDefault = F2(
 	});
 var $author$project$Rests$update = F2(
 	function (msg, model) {
-		if (msg.$ === 'One') {
-			var id = msg.a;
-			var newPanel = A3(
-				$elm$core$Dict$update,
-				id.id,
-				$elm$core$Maybe$map(
-					function (b) {
-						return _Utils_update(
-							b,
-							{colour: 'green'});
-					}),
-				$author$project$Rests$workoutSelection);
-			return $author$project$Rests$SelectingSets(
-				A2(
-					$elm$core$Maybe$withDefault,
-					$author$project$Rests$defaultButton,
-					A2($elm$core$Dict$get, id.id, $author$project$Rests$workoutSelection)).value);
-		} else {
-			var n = msg.a;
-			return $author$project$Rests$SelectingSets(_List_Nil);
+		switch (msg.$) {
+			case 'One':
+				var id = msg.a;
+				var newPanel = A3(
+					$elm$core$Dict$update,
+					id.id,
+					$elm$core$Maybe$map(
+						function (b) {
+							return _Utils_update(
+								b,
+								{colour: 'green'});
+						}),
+					$author$project$Rests$workoutSelection);
+				return $author$project$Rests$SelectingSets(
+					A2(
+						$elm$core$Maybe$withDefault,
+						$author$project$Rests$defaultButton,
+						A2($elm$core$Dict$get, id.id, $author$project$Rests$workoutSelection)));
+			case 'SetsChosen':
+				var button = msg.a;
+				return $author$project$Rests$SelectingRests(button);
+			default:
+				var button = msg.a;
+				return $author$project$Rests$SelectingRests(button);
 		}
 	});
 var $elm$html$Html$div = _VirtualDom_node('div');
@@ -5917,10 +5938,61 @@ var $author$project$Rests$shape = function (info) {
 					]))
 			]));
 };
+var $author$project$Rests$RestsChosen = function (a) {
+	return {$: 'RestsChosen', a: a};
+};
+var $author$project$Rests$shapeChoiceOfRests = function (button) {
+	var rests = button.rest;
+	return A2(
+		$elm$core$List$map,
+		function (c) {
+			return A2(
+				$elm$svg$Svg$svg,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$width('300'),
+						$elm$svg$Svg$Attributes$height('120'),
+						$elm$svg$Svg$Attributes$viewBox('0 0 300 120'),
+						$elm$html$Html$Events$onClick(
+						$author$project$Rests$RestsChosen(button))
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$rect,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$x('10'),
+								$elm$svg$Svg$Attributes$y('10'),
+								$elm$svg$Svg$Attributes$width('200'),
+								$elm$svg$Svg$Attributes$height('100'),
+								$elm$svg$Svg$Attributes$rx('15'),
+								$elm$svg$Svg$Attributes$ry('15'),
+								$elm$svg$Svg$Attributes$fill('lightblue'),
+								$elm$svg$Svg$Attributes$id(c.label)
+							]),
+						_List_Nil),
+						A2(
+						$elm$svg$Svg$text_,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$x('43'),
+								$elm$svg$Svg$Attributes$y('77'),
+								$elm$svg$Svg$Attributes$fontSize('50px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(c.label)
+							]))
+					]));
+		},
+		rests);
+};
 var $author$project$Rests$SetsChosen = function (a) {
 	return {$: 'SetsChosen', a: a};
 };
-var $author$project$Rests$shapeChoiceOfSets = function (choice) {
+var $author$project$Rests$shapeChoiceOfSets = function (button) {
+	var sets = button.value;
 	return A2(
 		$elm$core$List$map,
 		function (c) {
@@ -5932,7 +6004,7 @@ var $author$project$Rests$shapeChoiceOfSets = function (choice) {
 						$elm$svg$Svg$Attributes$height('120'),
 						$elm$svg$Svg$Attributes$viewBox('0 0 120 120'),
 						$elm$html$Html$Events$onClick(
-						$author$project$Rests$SetsChosen(c))
+						$author$project$Rests$SetsChosen(button))
 					]),
 				_List_fromArray(
 					[
@@ -5966,59 +6038,77 @@ var $author$project$Rests$shapeChoiceOfSets = function (choice) {
 							]))
 					]));
 		},
-		choice);
+		sets);
 };
 var $author$project$Rests$view = function (model) {
-	if (model.$ === 'SelectingWorkout') {
-		var buttons = model.a;
-		return A2(
-			$elm$html$Html$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					$author$project$Rests$header,
-					A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$author$project$Rests$shape(
-							A2($author$project$Rests$getButtonInfo, 'Strength', buttons))
-						])),
-					A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$author$project$Rests$shape(
-							A2($author$project$Rests$getButtonInfo, 'Endurance', buttons))
-						])),
-					A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$author$project$Rests$shape(
-							A2($author$project$Rests$getButtonInfo, 'Hyper', buttons))
-						]))
-				]));
-	} else {
-		var choice = model.a;
-		return A2(
-			$elm$html$Html$div,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					_List_fromArray(
-						[$author$project$Rests$header])),
-					A2(
-					$elm$html$Html$div,
-					_List_Nil,
-					$author$project$Rests$shapeChoiceOfSets(choice))
-				]));
+	switch (model.$) {
+		case 'SelectingWorkout':
+			var buttons = model.a;
+			return A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$author$project$Rests$header,
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$author$project$Rests$shape(
+								A2($author$project$Rests$getButtonInfo, 'Strength', buttons))
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$author$project$Rests$shape(
+								A2($author$project$Rests$getButtonInfo, 'Endurance', buttons))
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$author$project$Rests$shape(
+								A2($author$project$Rests$getButtonInfo, 'Hyper', buttons))
+							]))
+					]));
+		case 'SelectingSets':
+			var choice = model.a;
+			return A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[$author$project$Rests$header])),
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						$author$project$Rests$shapeChoiceOfSets(choice))
+					]));
+		default:
+			var choice = model.a;
+			return A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[$author$project$Rests$header])),
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						$author$project$Rests$shapeChoiceOfRests(choice))
+					]));
 	}
 };
 var $author$project$Rests$main = $elm$browser$Browser$sandbox(
