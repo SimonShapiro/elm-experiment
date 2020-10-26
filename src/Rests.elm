@@ -1,8 +1,8 @@
 module Rests exposing (..)
 
 import Browser
-import Html exposing (Html, button, div, text, input, a, i, span)
-import Html.Attributes exposing (href)
+import Html exposing (Html, button, div, text, input, a, i, span, audio)
+import Html.Attributes exposing (href, src, controls, autoplay)
 import Html.Events exposing (onClick)
 import Html.Events exposing (onInput)
 
@@ -11,6 +11,8 @@ import Svg.Attributes exposing (..)
 
 import Dict exposing(..)
 import Maybe exposing (Maybe)
+
+import Time
 
 type alias ButtonPanel =
     Dict String ButtonInfo
@@ -35,15 +37,24 @@ type alias ButtonInfo =
     , rest: ChoiceOfRests
     }
 
+type alias SetsAndRests =
+    {   targetSets: Int
+        , targetRests: Int
+        , currentSets: Int
+        , currentRests: Int
+    }
+
 type Scene =
     SelectingWorkout ButtonPanel
     | SelectingSets ButtonInfo 
     | SelectingRests ButtonInfo String
-    | Training ButtonInfo String String
+    | Training ButtonInfo String String Bool
+    | Resting SetsAndRests
+    | Sounding
 
 -- [TimeConfig(60, "60sec"), TimeConfig(90, "90sec"), TimeConfig(120, "2mins"), TimeConfig(300, "5mins")]
 restGroup1: ChoiceOfRests
-restGroup1 = [RestPeriod 60 "60sec"
+restGroup1 = [RestPeriod 6 "60sec"
                 , RestPeriod 90 "90sec"
                 , RestPeriod 120 "2mins"
                 , RestPeriod 300 "5mins"
@@ -56,6 +67,11 @@ workoutSelection = [("Strength", ButtonInfo "pink" "S" [1, 3, 5, 6, 10] "Strengt
                     ]
                     |> Dict.fromList
 
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Time.every 1000 Tick
+
 type alias Model = 
     Scene
 
@@ -63,6 +79,8 @@ type Msg =
     One ButtonInfo
     | SetsChosen ButtonInfo String
     | RestsChosen ButtonInfo String String
+    | RestingStarted SetsAndRests
+    | Tick Time.Posix
     
 defaultButton: ButtonInfo
 defaultButton = { colour = "black"
@@ -72,23 +90,43 @@ defaultButton = { colour = "black"
                 ,  rest = []
                 }
 
-init: Model
-init = SelectingWorkout workoutSelection
+init: ()->(Model, Cmd Msg)
+init _ = (SelectingWorkout workoutSelection
+        , Cmd.batch
+      [])
 
 main: Program () Model Msg
 main =
-  Browser.sandbox { init = init, update = update, view = view }
-update: Msg->Model->Model
+  Browser.element { init = init, update = update, view = view, subscriptions = subscriptions }  -- subscrptions
+update: Msg->Model->(Model, Cmd Msg)
 update msg model =
     case msg of
         One id ->
-            SelectingSets (workoutSelection 
+            (SelectingSets (workoutSelection 
                             |> Dict.get id.id
-                            |> Maybe.withDefault defaultButton)
+                            |> Maybe.withDefault defaultButton), Cmd.batch [])
         SetsChosen button sets ->
-            SelectingRests button sets
+            (SelectingRests button sets, Cmd.none)
         RestsChosen button sets rest ->
-            Training button sets rest
+            (Training button sets rest False, Cmd.none)
+        RestingStarted setsAndRests->
+            (Resting setsAndRests, Cmd.none)
+        Tick tick ->
+            case model of
+                Resting setsAndRests ->
+                    let
+                        newRests = (setsAndRests.currentRests + 1)
+                    in
+                        if newRests < setsAndRests.targetRests
+                        then
+                            Debug.log("Tick")
+                            (Resting {setsAndRests | currentRests =  newRests}, Cmd.none)
+                        else 
+                            -- sound alarm here
+                            (Training defaultButton (String.fromInt setsAndRests.targetSets) (String.fromInt setsAndRests.targetRests) True, Cmd.none)
+                _ ->
+                    (model, Cmd.none)
+
     --        SelectingWorkout  (Dict.update id.id (Maybe.map (\b ->  { b | colour = "green"}   )) workoutSelection)
             
             --Maybe.withDefault "No user" defaultButton 
@@ -135,13 +173,27 @@ view model =
                 div [][header]
                     , div [] (shapeChoiceOfRests choice sets)
                 ]
-        Training choice sets rest->
-            div [][Html.text ("Training"++" "++sets++":"++rest)
+        Training choice sets rest sound->
+            div [][            div [][audio 
+                [ id "pulse-beep"
+        -- src can be a local file too.
+                , src "Door Bell-SoundBible.com-1986366504.mp3"  -- "https://soundbible.com/mp3/Tyrannosaurus%20Rex%20Roar-SoundBible.com-807702404.mp3"
+
+--                , src "https://soundbible.com/mp3/Tyrannosaurus%20Rex%20Roar-SoundBible.com-807702404.mp3"
+                , controls False
+                , autoplay sound
+                ] []
+
+
+            ]
+             , Html.text ("Training"++" "++sets++":"++rest)
                     , div [][
                         svg [ width "200"
                             , height "120"
                             , viewBox "0 0 200 120"
-                    --        , onClick (RestsChosen button setsChosen (String.fromInt c.seconds))
+                            , onClick (RestingStarted (SetsAndRests (sets |> String.toInt |> Maybe.withDefault 10)
+                                                        (rest |> String.toInt |> Maybe.withDefault 20)
+                                                        0 0))
                             ]
                             [ rect
                                 [ x "10"
@@ -190,6 +242,20 @@ view model =
         
                        ]
                     ]
+        Resting setsAndRests->
+            div [][Html.text ("Resting"++(String.fromInt setsAndRests.targetRests)
+                                        ++(String.fromInt setsAndRests.currentRests))]
+        Sounding ->
+            div [][audio 
+                [ id "pulse-beep"
+        -- src can be a local file too.
+                , src "Door Bell-SoundBible.com-1986366504.mp3"  -- "https://soundbible.com/mp3/Tyrannosaurus%20Rex%20Roar-SoundBible.com-807702404.mp3"
+                , controls False
+                , autoplay True
+                ] []
+
+
+            ]
             
 
 
