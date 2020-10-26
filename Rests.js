@@ -6127,9 +6127,9 @@ var $author$project$Rests$view = function (model) {
 								$elm$html$Html$audio,
 								_List_fromArray(
 									[
-										$elm$svg$Svg$Attributes$id('pulse-beep'),
+										$elm$svg$Svg$Attributes$id('beep'),
 										$elm$html$Html$Attributes$src('Door Bell-SoundBible.com-1986366504.mp3'),
-										$elm$html$Html$Attributes$controls(false),
+										$elm$html$Html$Attributes$controls(true),
 										$elm$html$Html$Attributes$autoplay(sound)
 									]),
 								_List_Nil)

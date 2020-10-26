@@ -175,12 +175,12 @@ view model =
                 ]
         Training choice sets rest sound->
             div [][            div [][audio 
-                [ id "pulse-beep"
+                [ id "beep"
         -- src can be a local file too.
                 , src "Door Bell-SoundBible.com-1986366504.mp3"  -- "https://soundbible.com/mp3/Tyrannosaurus%20Rex%20Roar-SoundBible.com-807702404.mp3"
 
 --                , src "https://soundbible.com/mp3/Tyrannosaurus%20Rex%20Roar-SoundBible.com-807702404.mp3"
-                , controls False
+                , controls True
                 , autoplay sound
                 ] []
 
