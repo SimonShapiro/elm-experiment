@@ -5883,7 +5883,9 @@ var $author$project$Rests$shape = function (info) {
 			[
 				$elm$svg$Svg$Attributes$width('120'),
 				$elm$svg$Svg$Attributes$height('120'),
-				$elm$svg$Svg$Attributes$viewBox('0 0 120 120')
+				$elm$svg$Svg$Attributes$viewBox('0 0 120 120'),
+				$elm$html$Html$Events$onClick(
+				$author$project$Rests$One(info))
 			]),
 		_List_fromArray(
 			[
@@ -5898,8 +5900,6 @@ var $author$project$Rests$shape = function (info) {
 						$elm$svg$Svg$Attributes$rx('15'),
 						$elm$svg$Svg$Attributes$ry('15'),
 						$elm$svg$Svg$Attributes$fill(info.colour),
-						$elm$html$Html$Events$onClick(
-						$author$project$Rests$One(info)),
 						$elm$svg$Svg$Attributes$id(info.id)
 					]),
 				_List_Nil),
@@ -5930,7 +5930,9 @@ var $author$project$Rests$shapeChoiceOfSets = function (choice) {
 					[
 						$elm$svg$Svg$Attributes$width('120'),
 						$elm$svg$Svg$Attributes$height('120'),
-						$elm$svg$Svg$Attributes$viewBox('0 0 120 120')
+						$elm$svg$Svg$Attributes$viewBox('0 0 120 120'),
+						$elm$html$Html$Events$onClick(
+						$author$project$Rests$SetsChosen(c))
 					]),
 				_List_fromArray(
 					[
@@ -5945,12 +5947,23 @@ var $author$project$Rests$shapeChoiceOfSets = function (choice) {
 								$elm$svg$Svg$Attributes$rx('15'),
 								$elm$svg$Svg$Attributes$ry('15'),
 								$elm$svg$Svg$Attributes$fill('grey'),
-								$elm$html$Html$Events$onClick(
-								$author$project$Rests$SetsChosen(c)),
 								$elm$svg$Svg$Attributes$id(
 								$elm$core$String$fromInt(c))
 							]),
-						_List_Nil)
+						_List_Nil),
+						A2(
+						$elm$svg$Svg$text_,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$x('43'),
+								$elm$svg$Svg$Attributes$y('77'),
+								$elm$svg$Svg$Attributes$fontSize('50px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								$elm$core$String$fromInt(c))
+							]))
 					]));
 		},
 		choice);

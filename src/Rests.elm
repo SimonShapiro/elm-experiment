@@ -120,6 +120,7 @@ shape  info =
     [ width "120"
     , height "120"
     , viewBox "0 0 120 120"
+    , onClick (One info)
     ]
     [ rect
         [ x "10"
@@ -129,7 +130,6 @@ shape  info =
         , rx "15"
         , ry "15"
         , fill info.colour
-        , onClick (One info)
         , id info.id
         ]
         []
@@ -144,23 +144,30 @@ shape  info =
 shapeChoiceOfSets: ChoiceOfSets->List (Html Msg)
 shapeChoiceOfSets choice = 
     List.map (\c -> 
-        svg
-    [ width "120"
-    , height "120"
-    , viewBox "0 0 120 120"
-    ]
-    [ rect
-        [ x "10"
-        , y "10"
-        , width "100"
-        , height "100"
-        , rx "15"
-        , ry "15"
-        , fill "grey"
+    svg
+        [ width "120"
+        , height "120"
+        , viewBox "0 0 120 120"
         , onClick (SetsChosen c)
-        , id (String.fromInt c)
         ]
-        []
-    ]
+        [ rect
+            [ x "10"
+            , y "10"
+            , width "100"
+            , height "100"
+            , rx "15"
+            , ry "15"
+            , fill "grey"
+            , id (String.fromInt c)
+            ]
+            []
+          , text_
+                [ x "43"
+                , y "77"
+                , fontSize "50px"
+            ]
+        [Html.text (String.fromInt c)]  
+  
+        ]
     ) choice
 
