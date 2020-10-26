@@ -4598,7 +4598,7 @@ var $author$project$Rests$workoutSelection = $elm$core$Dict$fromList(
 				'pink',
 				'Strength',
 				_List_fromArray(
-					[1, 3, 4]),
+					[1, 3, 5, 6, 10]),
 				'Strength')),
 			_Utils_Tuple2(
 			'Endurance',
@@ -4607,8 +4607,17 @@ var $author$project$Rests$workoutSelection = $elm$core$Dict$fromList(
 				'purple',
 				'Endurance',
 				_List_fromArray(
-					[6, 7, 8, 9]),
-				'Endurance'))
+					[2, 3]),
+				'Endurance')),
+			_Utils_Tuple2(
+			'Hyper',
+			A4(
+				$author$project$Rests$ButtonInfo,
+				'red',
+				'Hyper',
+				_List_fromArray(
+					[3, 4]),
+				'Hyper'))
 		]));
 var $author$project$Rests$init = $author$project$Rests$SelectingWorkout($author$project$Rests$workoutSelection);
 var $elm$core$Result$Err = function (a) {
@@ -5956,6 +5965,14 @@ var $author$project$Rests$view = function (model) {
 						[
 							$author$project$Rests$shape(
 							A2($author$project$Rests$getButtonInfo, 'Endurance', buttons))
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_Nil,
+					_List_fromArray(
+						[
+							$author$project$Rests$shape(
+							A2($author$project$Rests$getButtonInfo, 'Hyper', buttons))
 						]))
 				]));
 	} else {

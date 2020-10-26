@@ -32,8 +32,9 @@ type Scene =
     | SelectingSets ChoiceOfSets
 
 workoutSelection: ButtonPanel
-workoutSelection = [("Strength", ButtonInfo "pink" "Strength" [1, 3, 4] "Strength")
-                    ,("Endurance", ButtonInfo "purple" "Endurance" [6, 7, 8, 9] "Endurance")
+workoutSelection = [("Strength", ButtonInfo "pink" "Strength" [1, 3, 5, 6, 10] "Strength")
+                    ,("Endurance", ButtonInfo "purple" "Endurance" [2, 3] "Endurance")
+                    ,("Hyper", ButtonInfo "red" "Hyper" [3, 4] "Hyper")
                     ]
                     |> Dict.fromList
 
@@ -101,8 +102,10 @@ view model =
         SelectingWorkout buttons -> 
 --        Debug.log ("There" ++ (getButtonInfo "Endurance" buttons).colour)
             div [][header
+            -- below can be generated from the type
                 , div [] [shape <| getButtonInfo "Strength" buttons] -- orange
                 , div [] [shape <| getButtonInfo "Endurance" buttons]
+                , div [] [shape <| getButtonInfo "Hyper" buttons]
             ]
         SelectingSets choice ->
             div [][
