@@ -1,4 +1,4 @@
-module Rests exposing (..)
+port module Rests exposing (..)
 
 import Browser
 import Html exposing (Html, button, div, text, input, a, i, span, audio)
@@ -110,7 +110,8 @@ update msg model =
         RestsChosen button sets rest ->
             (Training button sets rest False, Cmd.none)
         RestingStarted setsAndRests->
-            (Resting setsAndRests, Cmd.none)
+        -- dummy sound play here
+            (Resting setsAndRests, playMusic "play")
         Tick tick ->
             case model of
                 Resting setsAndRests ->
@@ -353,3 +354,13 @@ shapeChoiceOfRests button setsChosen =
   
         ]
     ) restsList
+-- PORTS
+
+
+port playMusic : String -> Cmd msg
+
+
+port stopMusic : String -> Cmd msg
+
+
+port setSource : String -> Cmd msg
