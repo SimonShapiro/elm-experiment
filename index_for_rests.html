@@ -23,12 +23,13 @@
     document.getElementById("beep").play();
 });
 
-app.ports.stopMusic.subscribe(function() {
-    document.getElementById("beep").pause();
-});
+// app.ports.stopMusic.subscribe(function() {
+//     document.getElementById("beep").pause();
+// });
 
 app.ports.setSource.subscribe(function(source) {
     document.getElementById("beep").setAttribute("src",    source)    // "assets/sounds/" + source);
-});    </script>
+});   
+</script>
 </body>
 </html>

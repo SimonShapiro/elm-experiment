@@ -5194,6 +5194,7 @@ var $author$project$Rests$SelectingWorkout = function (a) {
 	return {$: 'SelectingWorkout', a: a};
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Rests$ButtonInfo = F5(
 	function (colour, label, value, id, rest) {
 		return {colour: colour, id: id, label: label, rest: rest, value: value};
@@ -5369,7 +5370,7 @@ var $author$project$Rests$workoutSelection = $elm$core$Dict$fromList(
 var $author$project$Rests$init = function (_v0) {
 	return _Utils_Tuple2(
 		$author$project$Rests$SelectingWorkout($author$project$Rests$workoutSelection),
-		$elm$core$Platform$Cmd$batch(_List_Nil));
+		$elm$core$Platform$Cmd$none);
 };
 var $author$project$Rests$Tick = function (a) {
 	return {$: 'Tick', a: a};
@@ -5697,9 +5698,9 @@ var $author$project$Rests$Training = F4(
 	});
 var $author$project$Rests$defaultButton = {colour: 'black', id: 'xx', label: 'Default', rest: _List_Nil, value: _List_Nil};
 var $elm$core$Debug$log = _Debug_log;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Rests$playMusic = _Platform_outgoingPort('playMusic', $elm$json$Json$Encode$string);
+var $author$project$Rests$setSource = _Platform_outgoingPort('setSource', $elm$json$Json$Encode$string);
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -5720,7 +5721,7 @@ var $author$project$Rests$update = F2(
 							$elm$core$Maybe$withDefault,
 							$author$project$Rests$defaultButton,
 							A2($elm$core$Dict$get, id.id, $author$project$Rests$workoutSelection))),
-					$elm$core$Platform$Cmd$batch(_List_Nil));
+					$elm$core$Platform$Cmd$none);
 			case 'SetsChosen':
 				var button = msg.a;
 				var sets = msg.b;
@@ -5738,7 +5739,12 @@ var $author$project$Rests$update = F2(
 				var setsAndRests = msg.a;
 				return _Utils_Tuple2(
 					$author$project$Rests$Resting(setsAndRests),
-					$author$project$Rests$playMusic('play'));
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[
+								$author$project$Rests$setSource('Door Bell-SoundBible.com-1986366504.mp3'),
+								$author$project$Rests$playMusic('Play')
+							])));
 			case 'Play':
 				return _Utils_Tuple2(
 					model,
@@ -5762,7 +5768,7 @@ var $author$project$Rests$update = F2(
 							$author$project$Rests$defaultButton,
 							$elm$core$String$fromInt(setsAndRests.targetSets),
 							$elm$core$String$fromInt(setsAndRests.targetRests),
-							true),
+							false),
 						$author$project$Rests$playMusic('play'));
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -6237,32 +6243,31 @@ var $author$project$Rests$view = function (model) {
 									]))
 							]))
 					]));
-		case 'Resting':
+		default:
 			var setsAndRests = model.a;
 			return A2(
 				$elm$html$Html$div,
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text(
-						'Resting' + ($elm$core$String$fromInt(setsAndRests.targetRests) + $elm$core$String$fromInt(setsAndRests.currentRests)))
-					]));
-		default:
-			return A2(
-				$elm$html$Html$div,
-				_List_Nil,
-				_List_fromArray(
-					[
 						A2(
-						$elm$html$Html$audio,
+						$elm$html$Html$div,
+						_List_Nil,
 						_List_fromArray(
 							[
-								$elm$svg$Svg$Attributes$id('pulse-beep'),
-								$elm$html$Html$Attributes$src('Door Bell-SoundBible.com-1986366504.mp3'),
-								$elm$html$Html$Attributes$controls(false),
-								$elm$html$Html$Attributes$autoplay(true)
-							]),
-						_List_Nil)
+								A2(
+								$elm$html$Html$audio,
+								_List_fromArray(
+									[
+										$elm$svg$Svg$Attributes$id('beep'),
+										$elm$html$Html$Attributes$src('Door Bell-SoundBible.com-1986366504.mp3'),
+										$elm$html$Html$Attributes$controls(false),
+										$elm$html$Html$Attributes$autoplay(false)
+									]),
+								_List_Nil)
+							])),
+						$elm$html$Html$text(
+						'Resting' + ($elm$core$String$fromInt(setsAndRests.targetRests) + $elm$core$String$fromInt(setsAndRests.currentRests)))
 					]));
 	}
 };

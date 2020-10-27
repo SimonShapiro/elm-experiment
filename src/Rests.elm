@@ -50,7 +50,6 @@ type Scene =
     | SelectingRests ButtonInfo String
     | Training ButtonInfo String String Bool
     | Resting SetsAndRests
-    | Sounding
 
 -- [TimeConfig(60, "60sec"), TimeConfig(90, "90sec"), TimeConfig(120, "2mins"), TimeConfig(300, "5mins")]
 restGroup1: ChoiceOfRests
@@ -93,8 +92,7 @@ defaultButton = { colour = "black"
 
 init: ()->(Model, Cmd Msg)
 init _ = (SelectingWorkout workoutSelection
-        , Cmd.batch
-      [])
+        , Cmd.none)
 
 main: Program () Model Msg
 main =
@@ -105,14 +103,15 @@ update msg model =
         One id ->
             (SelectingSets (workoutSelection 
                             |> Dict.get id.id
-                            |> Maybe.withDefault defaultButton), Cmd.batch [])
+                            |> Maybe.withDefault defaultButton), Cmd.none)
         SetsChosen button sets ->
             (SelectingRests button sets, Cmd.none)
         RestsChosen button sets rest ->
             (Training button sets rest False, Cmd.none)
         RestingStarted setsAndRests->
         -- dummy sound play here
-            (Resting setsAndRests, playMusic "play")
+            (Resting setsAndRests, Cmd.batch [setSource "Door Bell-SoundBible.com-1986366504.mp3"
+                                            , playMusic "Play"])
         Play ->
             (model, playMusic "Play")
         Tick tick ->
@@ -127,7 +126,7 @@ update msg model =
                             (Resting {setsAndRests | currentRests =  newRests}, Cmd.none)
                         else 
                             -- sound alarm here
-                            (Training defaultButton (String.fromInt setsAndRests.targetSets) (String.fromInt setsAndRests.targetRests) True, playMusic "play")
+                            (Training defaultButton (String.fromInt setsAndRests.targetSets) (String.fromInt setsAndRests.targetRests) False, playMusic "play")
                 _ ->
                     (model, Cmd.none)
 
@@ -247,19 +246,19 @@ view model =
                        ]
                     ]
         Resting setsAndRests->
-            div [][Html.text ("Resting"++(String.fromInt setsAndRests.targetRests)
-                                        ++(String.fromInt setsAndRests.currentRests))]
-        Sounding ->
-            div [][audio 
-                [ id "pulse-beep"
+            div [][div [][audio 
+                [ id "beep"
         -- src can be a local file too.
                 , src "Door Bell-SoundBible.com-1986366504.mp3"  -- "https://soundbible.com/mp3/Tyrannosaurus%20Rex%20Roar-SoundBible.com-807702404.mp3"
+
+--                , src "https://soundbible.com/mp3/Tyrannosaurus%20Rex%20Roar-SoundBible.com-807702404.mp3"
                 , controls False
-                , autoplay True
+                , autoplay False
                 ] []
 
 
-            ]
+            ], Html.text ("Resting"++(String.fromInt setsAndRests.targetRests)
+                                        ++(String.fromInt setsAndRests.currentRests))]
             
 
 
@@ -363,7 +362,7 @@ shapeChoiceOfRests button setsChosen =
 port playMusic : String -> Cmd msg
 
 
-port stopMusic : String -> Cmd msg
+-- port stopMusic : String -> Cmd msg
 
 
 port setSource : String -> Cmd msg
