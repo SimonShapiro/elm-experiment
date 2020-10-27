@@ -127,7 +127,7 @@ update msg model =
                             (Resting {setsAndRests | currentRests =  newRests}, Cmd.none)
                         else 
                             -- sound alarm here
-                            (Training defaultButton (String.fromInt setsAndRests.targetSets) (String.fromInt setsAndRests.targetRests) True, Cmd.none)
+                            (Training defaultButton (String.fromInt setsAndRests.targetSets) (String.fromInt setsAndRests.targetRests) True, playMusic "play")
                 _ ->
                     (model, Cmd.none)
 

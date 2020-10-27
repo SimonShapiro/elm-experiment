@@ -5763,7 +5763,7 @@ var $author$project$Rests$update = F2(
 							$elm$core$String$fromInt(setsAndRests.targetSets),
 							$elm$core$String$fromInt(setsAndRests.targetRests),
 							true),
-						$elm$core$Platform$Cmd$none);
+						$author$project$Rests$playMusic('play'));
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
