@@ -5739,6 +5739,10 @@ var $author$project$Rests$update = F2(
 				return _Utils_Tuple2(
 					$author$project$Rests$Resting(setsAndRests),
 					$author$project$Rests$playMusic('play'));
+			case 'Play':
+				return _Utils_Tuple2(
+					model,
+					$author$project$Rests$playMusic('Play'));
 			default:
 				var tick = msg.a;
 				if (model.$ === 'Resting') {
@@ -5765,6 +5769,7 @@ var $author$project$Rests$update = F2(
 				}
 		}
 	});
+var $author$project$Rests$Play = {$: 'Play'};
 var $author$project$Rests$RestingStarted = function (a) {
 	return {$: 'RestingStarted', a: a};
 };
@@ -6130,7 +6135,7 @@ var $author$project$Rests$view = function (model) {
 									[
 										$elm$svg$Svg$Attributes$id('beep'),
 										$elm$html$Html$Attributes$src('Door Bell-SoundBible.com-1986366504.mp3'),
-										$elm$html$Html$Attributes$controls(true),
+										$elm$html$Html$Attributes$controls(false),
 										$elm$html$Html$Attributes$autoplay(sound)
 									]),
 								_List_Nil)
@@ -6198,7 +6203,8 @@ var $author$project$Rests$view = function (model) {
 									[
 										$elm$svg$Svg$Attributes$width('200'),
 										$elm$svg$Svg$Attributes$height('120'),
-										$elm$svg$Svg$Attributes$viewBox('0 0 200 120')
+										$elm$svg$Svg$Attributes$viewBox('0 0 200 120'),
+										$elm$html$Html$Events$onClick($author$project$Rests$Play)
 									]),
 								_List_fromArray(
 									[
