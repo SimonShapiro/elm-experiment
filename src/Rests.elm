@@ -81,6 +81,7 @@ type Msg =
     | RestsChosen ButtonInfo String String
     | RestingStarted SetsAndRests
     | Tick Time.Posix
+    | Play
     
 defaultButton: ButtonInfo
 defaultButton = { colour = "black"
@@ -112,6 +113,8 @@ update msg model =
         RestingStarted setsAndRests->
         -- dummy sound play here
             (Resting setsAndRests, playMusic "play")
+        Play ->
+            (model, playMusic "Play")
         Tick tick ->
             case model of
                 Resting setsAndRests ->
@@ -181,7 +184,7 @@ view model =
                 , src "Door Bell-SoundBible.com-1986366504.mp3"  -- "https://soundbible.com/mp3/Tyrannosaurus%20Rex%20Roar-SoundBible.com-807702404.mp3"
 
 --                , src "https://soundbible.com/mp3/Tyrannosaurus%20Rex%20Roar-SoundBible.com-807702404.mp3"
-                , controls True
+                , controls False
                 , autoplay sound
                 ] []
 
@@ -219,7 +222,7 @@ view model =
                         , svg [ width "200"
                             , height "120"
                             , viewBox "0 0 200 120"
-                    --        , onClick (RestsChosen button setsChosen (String.fromInt c.seconds))
+                            , onClick Play
                             ]
                             [ rect
                                 [ x "10"
