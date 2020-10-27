@@ -19,6 +19,7 @@
     node: document.getElementById('myapp')
     });
     app.ports.playMusic.subscribe(function() {
+        console.log("Triggered from ELM! ", document.getElementById('beep'))
     document.getElementById("beep").play();
 });
 
