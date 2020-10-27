@@ -5698,6 +5698,8 @@ var $author$project$Rests$Training = F4(
 var $author$project$Rests$defaultButton = {colour: 'black', id: 'xx', label: 'Default', rest: _List_Nil, value: _List_Nil};
 var $elm$core$Debug$log = _Debug_log;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Rests$playMusic = _Platform_outgoingPort('playMusic', $elm$json$Json$Encode$string);
 var $elm$core$Maybe$withDefault = F2(
 	function (_default, maybe) {
 		if (maybe.$ === 'Just') {
@@ -5736,7 +5738,7 @@ var $author$project$Rests$update = F2(
 				var setsAndRests = msg.a;
 				return _Utils_Tuple2(
 					$author$project$Rests$Resting(setsAndRests),
-					$elm$core$Platform$Cmd$none);
+					$author$project$Rests$playMusic('play'));
 			default:
 				var tick = msg.a;
 				if (model.$ === 'Resting') {
@@ -5793,7 +5795,6 @@ var $author$project$Rests$getButtonInfo = F2(
 	});
 var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(

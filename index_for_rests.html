@@ -18,6 +18,16 @@
     var app = Elm.Rests.init({
     node: document.getElementById('myapp')
     });
-    </script>
+    app.ports.playMusic.subscribe(function() {
+    document.getElementById("beep").play();
+});
+
+app.ports.stopMusic.subscribe(function() {
+    document.getElementById("beep").pause();
+});
+
+app.ports.setSource.subscribe(function(source) {
+    document.getElementById("beep").setAttribute("src",    source)    // "assets/sounds/" + source);
+});    </script>
 </body>
 </html>
