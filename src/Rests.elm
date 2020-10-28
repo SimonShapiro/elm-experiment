@@ -48,7 +48,7 @@ type Scene =
     SelectingWorkout ButtonPanel
     | SelectingSets ButtonInfo 
     | SelectingRests ButtonInfo String
-    | Training ButtonInfo String String Bool
+    | Training ButtonInfo SetsAndRests Bool
     | Resting SetsAndRests
 
 -- [TimeConfig(60, "60sec"), TimeConfig(90, "90sec"), TimeConfig(120, "2mins"), TimeConfig(300, "5mins")]
@@ -80,7 +80,7 @@ type Msg =
     | RestsChosen ButtonInfo String String
     | RestingStarted SetsAndRests
     | Tick Time.Posix
-    | Play
+    | Rested SetsAndRests
     
 defaultButton: ButtonInfo
 defaultButton = { colour = "black"
@@ -107,13 +107,17 @@ update msg model =
         SetsChosen button sets ->
             (SelectingRests button sets, Cmd.none)
         RestsChosen button sets rest ->
-            (Training button sets rest False, Cmd.none)
+            (Training button (SetsAndRests (sets |> String.toInt |> Maybe.withDefault 10)
+                                                        (rest |> String.toInt |> Maybe.withDefault 20)
+                                                        0 0) False, Cmd.none)
         RestingStarted setsAndRests->
         -- dummy sound play here
             (Resting setsAndRests, Cmd.batch [setSource "Door Bell-SoundBible.com-1986366504.mp3"
                                             , playMusic "Play"])
-        Play ->
-            (model, playMusic "Play")
+        Rested setsAndRests->
+--            (model, playMusic "Play")
+                -- sound alarm here
+                (Training defaultButton {setsAndRests | currentRests = 0}  False, playMusic "play")
         Tick tick ->
             case model of
                 Resting setsAndRests ->
@@ -126,7 +130,7 @@ update msg model =
                             (Resting {setsAndRests | currentRests =  newRests}, Cmd.none)
                         else 
                             -- sound alarm here
-                            (Training defaultButton (String.fromInt setsAndRests.targetSets) (String.fromInt setsAndRests.targetRests) False, playMusic "play")
+                            (Training defaultButton {setsAndRests | currentRests = 0} False, playMusic "play")
                 _ ->
                     (model, Cmd.none)
 
@@ -176,7 +180,7 @@ view model =
                 div [][header]
                     , div [] (shapeChoiceOfRests choice sets)
                 ]
-        Training choice sets rest sound->
+        Training choice setsAndRest sound->
             div [][            div [][audio 
                 [ id "beep"
         -- src can be a local file too.
@@ -189,14 +193,12 @@ view model =
 
 
             ]
-             , Html.text ("Training"++" "++sets++":"++rest)
+             , Html.text ("Training"++" "++(String.fromInt <| setsAndRest.targetSets)++":"++(String.fromInt <| setsAndRest.targetRests))
                     , div [][
                         svg [ width "200"
                             , height "120"
                             , viewBox "0 0 200 120"
-                            , onClick (RestingStarted (SetsAndRests (sets |> String.toInt |> Maybe.withDefault 10)
-                                                        (rest |> String.toInt |> Maybe.withDefault 20)
-                                                        0 0))
+                            , onClick (RestingStarted setsAndRest)
                             ]
                             [ rect
                                 [ x "10"
@@ -206,7 +208,7 @@ view model =
                                 , rx "15"
                                 , ry "15"
                                 , fill "lightblue"
-                                , id (sets++":"++rest)
+                                , id ("Training")
                                 ]
                                 []
                             , text_
@@ -218,10 +220,28 @@ view model =
                             ]  
         
                        ]
-                        , svg [ width "200"
+        
+                       ]
+                    ]
+        Resting setsAndRests->
+            div [][div []
+                [audio 
+                [ id "beep"
+        -- src can be a local file too.
+                , src "Door Bell-SoundBible.com-1986366504.mp3"  -- "https://soundbible.com/mp3/Tyrannosaurus%20Rex%20Roar-SoundBible.com-807702404.mp3"
+
+--                , src "https://soundbible.com/mp3/Tyrannosaurus%20Rex%20Roar-SoundBible.com-807702404.mp3"
+                , controls False
+                , autoplay False
+                ] []
+                ]
+                , Html.text ("Resting"++(String.fromInt setsAndRests.targetRests)
+                                        ++(String.fromInt setsAndRests.currentRests))
+                ,div [][
+                        svg [ width "200"
                             , height "120"
                             , viewBox "0 0 200 120"
-                            , onClick Play
+                            , onClick (Rested setsAndRests)
                             ]
                             [ rect
                                 [ x "10"
@@ -231,7 +251,7 @@ view model =
                                 , rx "15"
                                 , ry "15"
                                 , fill "lightblue"
-                                , id (sets++":"++rest)
+                                , id ("Rested")
                                 ]
                                 []
                             , text_
@@ -241,24 +261,8 @@ view model =
                                 ]
                             [Html.text "Rested"
                             ]  
-                            ]
-        
-                       ]
-                    ]
-        Resting setsAndRests->
-            div [][div [][audio 
-                [ id "beep"
-        -- src can be a local file too.
-                , src "Door Bell-SoundBible.com-1986366504.mp3"  -- "https://soundbible.com/mp3/Tyrannosaurus%20Rex%20Roar-SoundBible.com-807702404.mp3"
-
---                , src "https://soundbible.com/mp3/Tyrannosaurus%20Rex%20Roar-SoundBible.com-807702404.mp3"
-                , controls False
-                , autoplay False
-                ] []
-
-
-            ], Html.text ("Resting"++(String.fromInt setsAndRests.targetRests)
-                                        ++(String.fromInt setsAndRests.currentRests))]
+                            ]]
+                ]
             
 
 
