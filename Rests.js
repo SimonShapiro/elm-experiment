@@ -5766,14 +5766,17 @@ var $author$project$Rests$update = F2(
 							])));
 			case 'Rested':
 				var setsAndRests = msg.a;
-				return _Utils_Tuple2(
+				var newSets = setsAndRests.currentSets + 1;
+				return (_Utils_cmp(newSets, setsAndRests.targetSets) < 0) ? _Utils_Tuple2(
 					A3(
 						$author$project$Rests$Training,
 						$author$project$Rests$defaultButton,
 						_Utils_update(
 							setsAndRests,
-							{currentRests: 0, currentSets: setsAndRests.currentSets + 1}),
+							{currentRests: 0, currentSets: newSets}),
 						false),
+					$author$project$Rests$playMusic('play')) : _Utils_Tuple2(
+					$author$project$Rests$SelectingWorkout($author$project$Rests$workoutSelection),
 					$author$project$Rests$playMusic('play'));
 			default:
 				var tick = msg.a;
@@ -6084,6 +6087,22 @@ var $author$project$Rests$view = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$audio,
+								_List_fromArray(
+									[
+										$elm$svg$Svg$Attributes$id('beep'),
+										$elm$html$Html$Attributes$src('Door Bell-SoundBible.com-1986366504.mp3'),
+										$elm$html$Html$Attributes$controls(false),
+										$elm$html$Html$Attributes$autoplay(true)
+									]),
+								_List_Nil)
+							])),
 						$author$project$Rests$header,
 						A2(
 						$elm$html$Html$div,
