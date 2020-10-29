@@ -117,8 +117,15 @@ update msg model =
         Rested setsAndRests->
 --            (model, playMusic "Play")
                 -- sound alarm here
-                (Training defaultButton {setsAndRests | currentRests = 0
-                                                        , currentSets = setsAndRests.currentSets + 1}  False, playMusic "play")
+                let
+                    newSets = setsAndRests.currentSets + 1 
+                in
+                    if newSets < setsAndRests.targetSets
+                    then
+                        (Training defaultButton {setsAndRests | currentRests = 0
+                                                                , currentSets = newSets}  False, playMusic "play")
+                    else
+                        (SelectingWorkout workoutSelection, playMusic "play") -- sets finished perhaps a more dramatic sound
         Tick tick ->
             case model of
                 Resting setsAndRests ->
@@ -166,7 +173,17 @@ view model =
     case model of
         SelectingWorkout buttons -> 
 --        Debug.log ("There" ++ (getButtonInfo "Endurance" buttons).colour)
-            div [][header
+            div [][ div [][audio 
+                [ id "beep"
+        -- src can be a local file too.
+                , src "Door Bell-SoundBible.com-1986366504.mp3" -- since sets are finshed use another sound
+                , controls False
+                , autoplay True
+                ] []
+
+
+            ]
+            , header
             -- below can be generated from the type
                 , div [] [shape <| getButtonInfo "Strength" buttons] -- orange
                 , div [] [shape <| getButtonInfo "Endurance" buttons]
