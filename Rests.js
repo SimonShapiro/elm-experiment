@@ -5692,9 +5692,13 @@ var $author$project$Rests$SelectingRests = F2(
 var $author$project$Rests$SelectingSets = function (a) {
 	return {$: 'SelectingSets', a: a};
 };
-var $author$project$Rests$Training = F4(
-	function (a, b, c, d) {
-		return {$: 'Training', a: a, b: b, c: c, d: d};
+var $author$project$Rests$SetsAndRests = F4(
+	function (targetSets, targetRests, currentSets, currentRests) {
+		return {currentRests: currentRests, currentSets: currentSets, targetRests: targetRests, targetSets: targetSets};
+	});
+var $author$project$Rests$Training = F3(
+	function (a, b, c) {
+		return {$: 'Training', a: a, b: b, c: c};
 	});
 var $author$project$Rests$defaultButton = {colour: 'black', id: 'xx', label: 'Default', rest: _List_Nil, value: _List_Nil};
 var $elm$core$Debug$log = _Debug_log;
@@ -5733,7 +5737,22 @@ var $author$project$Rests$update = F2(
 				var sets = msg.b;
 				var rest = msg.c;
 				return _Utils_Tuple2(
-					A4($author$project$Rests$Training, button, sets, rest, false),
+					A3(
+						$author$project$Rests$Training,
+						button,
+						A4(
+							$author$project$Rests$SetsAndRests,
+							A2(
+								$elm$core$Maybe$withDefault,
+								10,
+								$elm$core$String$toInt(sets)),
+							A2(
+								$elm$core$Maybe$withDefault,
+								20,
+								$elm$core$String$toInt(rest)),
+							0,
+							0),
+						false),
 					$elm$core$Platform$Cmd$none);
 			case 'RestingStarted':
 				var setsAndRests = msg.a;
@@ -5745,10 +5764,17 @@ var $author$project$Rests$update = F2(
 								$author$project$Rests$setSource('Door Bell-SoundBible.com-1986366504.mp3'),
 								$author$project$Rests$playMusic('Play')
 							])));
-			case 'Play':
+			case 'Rested':
+				var setsAndRests = msg.a;
 				return _Utils_Tuple2(
-					model,
-					$author$project$Rests$playMusic('Play'));
+					A3(
+						$author$project$Rests$Training,
+						$author$project$Rests$defaultButton,
+						_Utils_update(
+							setsAndRests,
+							{currentRests: 0, currentSets: setsAndRests.currentSets + 1}),
+						false),
+					$author$project$Rests$playMusic('play'));
 			default:
 				var tick = msg.a;
 				if (model.$ === 'Resting') {
@@ -5763,11 +5789,12 @@ var $author$project$Rests$update = F2(
 									setsAndRests,
 									{currentRests: newRests})),
 							$elm$core$Platform$Cmd$none)) : _Utils_Tuple2(
-						A4(
+						A3(
 							$author$project$Rests$Training,
 							$author$project$Rests$defaultButton,
-							$elm$core$String$fromInt(setsAndRests.targetSets),
-							$elm$core$String$fromInt(setsAndRests.targetRests),
+							_Utils_update(
+								setsAndRests,
+								{currentRests: 0, currentSets: setsAndRests.currentSets + 1}),
 							false),
 						$author$project$Rests$playMusic('play'));
 				} else {
@@ -5775,14 +5802,12 @@ var $author$project$Rests$update = F2(
 				}
 		}
 	});
-var $author$project$Rests$Play = {$: 'Play'};
+var $author$project$Rests$Rested = function (a) {
+	return {$: 'Rested', a: a};
+};
 var $author$project$Rests$RestingStarted = function (a) {
 	return {$: 'RestingStarted', a: a};
 };
-var $author$project$Rests$SetsAndRests = F4(
-	function (targetSets, targetRests, currentSets, currentRests) {
-		return {currentRests: currentRests, currentSets: currentSets, targetRests: targetRests, targetSets: targetSets};
-	});
 var $elm$html$Html$audio = _VirtualDom_node('audio');
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$html$Html$Attributes$boolProperty = F2(
@@ -6122,9 +6147,8 @@ var $author$project$Rests$view = function (model) {
 					]));
 		case 'Training':
 			var choice = model.a;
-			var sets = model.b;
-			var rest = model.c;
-			var sound = model.d;
+			var setsAndRest = model.b;
+			var sound = model.c;
 			return A2(
 				$elm$html$Html$div,
 				_List_Nil,
@@ -6146,7 +6170,8 @@ var $author$project$Rests$view = function (model) {
 									]),
 								_List_Nil)
 							])),
-						$elm$html$Html$text('Training' + (' ' + (sets + (':' + rest)))),
+						$elm$html$Html$text(
+						'Training' + (' ' + ($elm$core$String$fromInt(setsAndRest.currentSets) + ('/' + ($elm$core$String$fromInt(setsAndRest.targetSets) + (':' + $elm$core$String$fromInt(setsAndRest.targetRests))))))),
 						A2(
 						$elm$html$Html$div,
 						_List_Nil,
@@ -6160,19 +6185,7 @@ var $author$project$Rests$view = function (model) {
 										$elm$svg$Svg$Attributes$height('120'),
 										$elm$svg$Svg$Attributes$viewBox('0 0 200 120'),
 										$elm$html$Html$Events$onClick(
-										$author$project$Rests$RestingStarted(
-											A4(
-												$author$project$Rests$SetsAndRests,
-												A2(
-													$elm$core$Maybe$withDefault,
-													10,
-													$elm$core$String$toInt(sets)),
-												A2(
-													$elm$core$Maybe$withDefault,
-													20,
-													$elm$core$String$toInt(rest)),
-												0,
-												0)))
+										$author$project$Rests$RestingStarted(setsAndRest))
 									]),
 								_List_fromArray(
 									[
@@ -6187,7 +6200,7 @@ var $author$project$Rests$view = function (model) {
 												$elm$svg$Svg$Attributes$rx('15'),
 												$elm$svg$Svg$Attributes$ry('15'),
 												$elm$svg$Svg$Attributes$fill('lightblue'),
-												$elm$svg$Svg$Attributes$id(sets + (':' + rest))
+												$elm$svg$Svg$Attributes$id('Training')
 											]),
 										_List_Nil),
 										A2(
@@ -6201,44 +6214,6 @@ var $author$project$Rests$view = function (model) {
 										_List_fromArray(
 											[
 												$elm$html$Html$text('Resting')
-											]))
-									])),
-								A2(
-								$elm$svg$Svg$svg,
-								_List_fromArray(
-									[
-										$elm$svg$Svg$Attributes$width('200'),
-										$elm$svg$Svg$Attributes$height('120'),
-										$elm$svg$Svg$Attributes$viewBox('0 0 200 120'),
-										$elm$html$Html$Events$onClick($author$project$Rests$Play)
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$svg$Svg$rect,
-										_List_fromArray(
-											[
-												$elm$svg$Svg$Attributes$x('10'),
-												$elm$svg$Svg$Attributes$y('10'),
-												$elm$svg$Svg$Attributes$width('180'),
-												$elm$svg$Svg$Attributes$height('90'),
-												$elm$svg$Svg$Attributes$rx('15'),
-												$elm$svg$Svg$Attributes$ry('15'),
-												$elm$svg$Svg$Attributes$fill('lightblue'),
-												$elm$svg$Svg$Attributes$id(sets + (':' + rest))
-											]),
-										_List_Nil),
-										A2(
-										$elm$svg$Svg$text_,
-										_List_fromArray(
-											[
-												$elm$svg$Svg$Attributes$x('45'),
-												$elm$svg$Svg$Attributes$y('63'),
-												$elm$svg$Svg$Attributes$fontSize('30px')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Rested')
 											]))
 									]))
 							]))
@@ -6267,7 +6242,52 @@ var $author$project$Rests$view = function (model) {
 								_List_Nil)
 							])),
 						$elm$html$Html$text(
-						'Resting' + ($elm$core$String$fromInt(setsAndRests.targetRests) + $elm$core$String$fromInt(setsAndRests.currentRests)))
+						'Resting' + ($elm$core$String$fromInt(setsAndRests.targetRests) + $elm$core$String$fromInt(setsAndRests.currentRests))),
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								$elm$svg$Svg$svg,
+								_List_fromArray(
+									[
+										$elm$svg$Svg$Attributes$width('200'),
+										$elm$svg$Svg$Attributes$height('120'),
+										$elm$svg$Svg$Attributes$viewBox('0 0 200 120'),
+										$elm$html$Html$Events$onClick(
+										$author$project$Rests$Rested(setsAndRests))
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$svg$Svg$rect,
+										_List_fromArray(
+											[
+												$elm$svg$Svg$Attributes$x('10'),
+												$elm$svg$Svg$Attributes$y('10'),
+												$elm$svg$Svg$Attributes$width('180'),
+												$elm$svg$Svg$Attributes$height('90'),
+												$elm$svg$Svg$Attributes$rx('15'),
+												$elm$svg$Svg$Attributes$ry('15'),
+												$elm$svg$Svg$Attributes$fill('lightblue'),
+												$elm$svg$Svg$Attributes$id('Rested')
+											]),
+										_List_Nil),
+										A2(
+										$elm$svg$Svg$text_,
+										_List_fromArray(
+											[
+												$elm$svg$Svg$Attributes$x('45'),
+												$elm$svg$Svg$Attributes$y('63'),
+												$elm$svg$Svg$Attributes$fontSize('30px')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Rested')
+											]))
+									]))
+							]))
 					]));
 	}
 };
