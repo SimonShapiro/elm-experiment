@@ -183,7 +183,7 @@ view model =
             div [][ div [][audio 
                 [ id "beep"
         -- src can be a local file too.
-                , src "Door Bell-SoundBible.com-1986366504.mp3" -- since sets are finshed use another sound
+                , src "Applause-SoundBible.com-151138312.mp3" -- since sets are finshed use another sound
                 , controls False
                 , autoplay True
                 ] []
