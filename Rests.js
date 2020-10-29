@@ -6104,7 +6104,7 @@ var $author$project$Rests$view = function (model) {
 								_List_fromArray(
 									[
 										$elm$svg$Svg$Attributes$id('beep'),
-										$elm$html$Html$Attributes$src('Door Bell-SoundBible.com-1986366504.mp3'),
+										$elm$html$Html$Attributes$src('Applause-SoundBible.com-151138312.mp3'),
 										$elm$html$Html$Attributes$controls(false),
 										$elm$html$Html$Attributes$autoplay(true)
 									]),
