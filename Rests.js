@@ -5783,23 +5783,30 @@ var $author$project$Rests$update = F2(
 				if (model.$ === 'Resting') {
 					var setsAndRests = model.a;
 					var newRests = setsAndRests.currentRests + 1;
-					return (_Utils_cmp(newRests, setsAndRests.targetRests) < 0) ? A2(
-						$elm$core$Debug$log,
-						'Tick',
-						_Utils_Tuple2(
-							$author$project$Rests$Resting(
+					if (_Utils_cmp(newRests, setsAndRests.targetRests) < 0) {
+						return A2(
+							$elm$core$Debug$log,
+							'Tick',
+							_Utils_Tuple2(
+								$author$project$Rests$Resting(
+									_Utils_update(
+										setsAndRests,
+										{currentRests: newRests})),
+								$elm$core$Platform$Cmd$none));
+					} else {
+						var newSets = setsAndRests.currentSets + 1;
+						return (_Utils_cmp(newSets, setsAndRests.targetSets) < 0) ? _Utils_Tuple2(
+							A3(
+								$author$project$Rests$Training,
+								$author$project$Rests$defaultButton,
 								_Utils_update(
 									setsAndRests,
-									{currentRests: newRests})),
-							$elm$core$Platform$Cmd$none)) : _Utils_Tuple2(
-						A3(
-							$author$project$Rests$Training,
-							$author$project$Rests$defaultButton,
-							_Utils_update(
-								setsAndRests,
-								{currentRests: 0, currentSets: setsAndRests.currentSets + 1}),
-							false),
-						$author$project$Rests$playMusic('play'));
+									{currentRests: 0, currentSets: newSets}),
+								false),
+							$author$project$Rests$playMusic('play')) : _Utils_Tuple2(
+							$author$project$Rests$SelectingWorkout($author$project$Rests$workoutSelection),
+							$author$project$Rests$playMusic('play'));
+					}
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
