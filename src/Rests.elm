@@ -137,9 +137,16 @@ update msg model =
                             Debug.log("Tick")
                             (Resting {setsAndRests | currentRests =  newRests}, Cmd.none)
                         else 
-                            -- sound alarm here
-                            (Training defaultButton {setsAndRests | currentRests = 0                                                        
-                                                                    , currentSets = setsAndRests.currentSets + 1} False, playMusic "play")
+                            let
+                                newSets = setsAndRests.currentSets + 1 
+                            in
+                                if newSets < setsAndRests.targetSets
+                                then
+                                        -- sound alarm here
+                                    (Training defaultButton {setsAndRests | currentRests = 0
+                                                                            , currentSets = newSets}  False, playMusic "play")
+                                else
+                                    (SelectingWorkout workoutSelection, playMusic "play") -- sets finished perhaps a more dramatic sound
                 _ ->
                     (model, Cmd.none)
 
