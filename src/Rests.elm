@@ -117,7 +117,8 @@ update msg model =
         Rested setsAndRests->
 --            (model, playMusic "Play")
                 -- sound alarm here
-                (Training defaultButton {setsAndRests | currentRests = 0}  False, playMusic "play")
+                (Training defaultButton {setsAndRests | currentRests = 0
+                                                        , currentSets = setsAndRests.currentSets + 1}  False, playMusic "play")
         Tick tick ->
             case model of
                 Resting setsAndRests ->
@@ -130,7 +131,8 @@ update msg model =
                             (Resting {setsAndRests | currentRests =  newRests}, Cmd.none)
                         else 
                             -- sound alarm here
-                            (Training defaultButton {setsAndRests | currentRests = 0} False, playMusic "play")
+                            (Training defaultButton {setsAndRests | currentRests = 0                                                        
+                                                                    , currentSets = setsAndRests.currentSets + 1} False, playMusic "play")
                 _ ->
                     (model, Cmd.none)
 
@@ -193,7 +195,7 @@ view model =
 
 
             ]
-             , Html.text ("Training"++" "++(String.fromInt <| setsAndRest.targetSets)++":"++(String.fromInt <| setsAndRest.targetRests))
+             , Html.text ("Training"++" "++(String.fromInt <| setsAndRest.currentSets)++"/"++(String.fromInt <| setsAndRest.targetSets)++":"++(String.fromInt <| setsAndRest.targetRests))
                     , div [][
                         svg [ width "200"
                             , height "120"

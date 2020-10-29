@@ -5772,7 +5772,7 @@ var $author$project$Rests$update = F2(
 						$author$project$Rests$defaultButton,
 						_Utils_update(
 							setsAndRests,
-							{currentRests: 0}),
+							{currentRests: 0, currentSets: setsAndRests.currentSets + 1}),
 						false),
 					$author$project$Rests$playMusic('play'));
 			default:
@@ -5794,7 +5794,7 @@ var $author$project$Rests$update = F2(
 							$author$project$Rests$defaultButton,
 							_Utils_update(
 								setsAndRests,
-								{currentRests: 0}),
+								{currentRests: 0, currentSets: setsAndRests.currentSets + 1}),
 							false),
 						$author$project$Rests$playMusic('play'));
 				} else {
@@ -6171,7 +6171,7 @@ var $author$project$Rests$view = function (model) {
 								_List_Nil)
 							])),
 						$elm$html$Html$text(
-						'Training' + (' ' + ($elm$core$String$fromInt(setsAndRest.targetSets) + (':' + $elm$core$String$fromInt(setsAndRest.targetRests))))),
+						'Training' + (' ' + ($elm$core$String$fromInt(setsAndRest.currentSets) + ('/' + ($elm$core$String$fromInt(setsAndRest.targetSets) + (':' + $elm$core$String$fromInt(setsAndRest.targetRests))))))),
 						A2(
 						$elm$html$Html$div,
 						_List_Nil,
