@@ -1,0 +1,71 @@
+.Sbutton {
+    background-color: #af4c99;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 32px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 300px;
+    border-radius: 15px;
+}
+.Ebutton {
+    background-color: #5b4caf;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 32px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 300px;
+    border-radius: 15px;
+}
+.Hbutton {
+    background-color: #99af4c;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 32px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width: 300px;
+    border-radius: 15px;
+}
+.setButton {
+    background-color: #acacac;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 32px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 15px;
+}
+.trainingButton {
+    background-color: #925656;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 32px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 15px;
+}
+.bigFont {
+    font-size: 64px;
+}
